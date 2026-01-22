@@ -36,7 +36,6 @@ class Network:
         """Initialize an empty supply chain network."""
         self.graph = nx.DiGraph()
         self.profiles: Dict[str, BufferProfile] = {}
-        self._auto_propagate = True  # Control automatic ADU propagation
     
     # ========== Profile Management ==========
     
@@ -159,13 +158,6 @@ class Network:
                 f"Adding edge {parent_id} -> {child_id} would create a cycle. "
                 "Supply chain must be a directed acyclic graph (DAG)."
             )
-        
-        # Propagate ADU after BOM change (if auto-propagation enabled)
-        if self._auto_propagate:
-            self.propagate_adu()
-        
-        # Propagate ADU after BOM change
-        self.propagate_adu()
     
     def get_bom_quantity(self, parent_id: str, child_id: str) -> float:
         """
@@ -346,6 +338,25 @@ class Network:
             if node.adu == 0.0:
                 node.adu = None
     
+    def update_network(self):
+        """
+        Update all calculated/derived values in the network.
+        
+        Call this method after:
+        - Loading a network from file
+        - Modifying BOM relationships
+        - Changing independent ADU values
+        - Any structural or demand changes
+        
+        Currently performs:
+        - ADU propagation through BOM
+        
+        Will be extended to include:
+        - Cumulative lead time calculation
+        - Buffer sizing calculations
+        """
+        self.propagate_adu()
+    
     # ========== Validation ==========
     
     def validate(self) -> Tuple[bool, List[str]]:
@@ -437,18 +448,16 @@ class Network:
             node = NetworkNode.from_dict(node_data)
             network.add_node(node)
         
-        # Load edges (disable auto-propagation during batch loading)
-        network._auto_propagate = False
+        # Load edges
         for edge_data in data.get("edges", []):
             network.add_bom_relationship(
                 edge_data["parent_id"],
                 edge_data["child_id"],
                 edge_data["quantity"]
             )
-        network._auto_propagate = True
         
-        # Propagate ADU through network once after all edges loaded
-        network.propagate_adu()
+        # Update all calculated values
+        network.update_network()
         
         return network
     
