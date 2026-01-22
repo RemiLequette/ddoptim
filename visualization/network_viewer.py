@@ -67,71 +67,106 @@ class NetworkVisualizer:
         self._build_layout()
         self._setup_callbacks()
     
+    # Node rectangle dimensions
+    NODE_WIDTH = 1.8
+    NODE_HEIGHT = 0.9
+    # Lead time circle dimensions
+    LT_CIRCLE_RADIUS = 0.22
+
     def _calculate_hierarchical_layout(self) -> Dict[str, Tuple[float, float]]:
         """
         Calculate hierarchical tree layout for the network.
-        
+        Top-down layout with finished products at top, components below.
+
         Returns:
-            Dictionary mapping node_id to (x, y) coordinates
+            Dictionary mapping node_id to (x, y) coordinates (center of node)
         """
         if not self.network:
             return {}
-        
-        # Use NetworkX hierarchical layout (tree-like)
-        # Nodes are positioned by their topological level
+
         pos = {}
-        
+
         try:
             # Get topological order (finished products first)
             topo_order = self.network.get_topological_order()
-            
+
             # Assign levels based on longest path from finished products
+            # Level 0 = finished products (top), higher levels = deeper in BOM
             levels = {}
-            for node_id in reversed(topo_order):
-                # Get maximum level of children + 1
-                children = self.network.get_children(node_id)
-                if not children:
-                    levels[node_id] = 0  # Leaf node
+            for node_id in topo_order:
+                # Get parents of this node
+                parents = self.network.get_parents(node_id)
+                if not parents:
+                    levels[node_id] = 0  # Root node (finished product)
                 else:
-                    levels[node_id] = max(levels[child_id] for child_id in children) + 1
-            
+                    levels[node_id] = max(levels[parent_id] for parent_id in parents) + 1
+
             # Group nodes by level
             nodes_by_level = {}
             for node_id, level in levels.items():
                 if level not in nodes_by_level:
                     nodes_by_level[level] = []
                 nodes_by_level[level].append(node_id)
-            
-            # Position nodes
-            max_level = max(levels.values())
+
+            # Position nodes - top down (level 0 at top, higher y = lower on screen)
+            max_level = max(levels.values()) if levels else 0
+            y_spacing = 2.0  # Vertical spacing between levels
+
             for level, node_ids in nodes_by_level.items():
-                # Y coordinate based on level (inverted so finished products at top)
-                y = (max_level - level) * 2
-                
+                # Y coordinate: level 0 at top (high y), increasing levels go down
+                y = (max_level - level) * y_spacing
+
                 # X coordinates spread evenly
                 num_nodes = len(node_ids)
-                x_spacing = 10 / (num_nodes + 1) if num_nodes > 0 else 5
-                
+                x_gap = 1.0  # Horizontal gap between nodes
+                total_width = num_nodes * self.NODE_WIDTH + (num_nodes - 1) * x_gap
+                start_x = -total_width / 2 + self.NODE_WIDTH / 2
+
                 for i, node_id in enumerate(sorted(node_ids)):
-                    x = (i + 1) * x_spacing
+                    x = start_x + i * (self.NODE_WIDTH + x_gap)
                     pos[node_id] = (x, y)
-            
+
         except Exception as e:
             print(f"Error calculating layout: {e}")
             # Fallback to spring layout
             pos = nx.spring_layout(self.network.graph, k=2, iterations=50)
-            # Convert to dictionary with tuples
             pos = {node_id: (coords[0] * 10, coords[1] * 10) for node_id, coords in pos.items()}
-        
+
         return pos
     
-    def _create_network_figure(self, highlight_node: Optional[str] = None) -> go.Figure:
+    def _create_orthogonal_edge(self, x0: float, y0: float, x1: float, y1: float) -> Tuple[List[float], List[float]]:
         """
-        Create Plotly figure for the network.
-        
+        Create orthogonal (vertical-horizontal-vertical) edge path.
+
+        Args:
+            x0, y0: Start point (parent node center)
+            x1, y1: End point (child node center)
+
+        Returns:
+            Tuple of (x_coords, y_coords) for the path
+        """
+        # Adjust start/end to edge of rectangles
+        y0_bottom = y0 - self.NODE_HEIGHT / 2  # Bottom of parent
+        y1_top = y1 + self.NODE_HEIGHT / 2      # Top of child
+
+        # Midpoint for horizontal segment
+        y_mid = (y0_bottom + y1_top) / 2
+
+        # Path: down from parent, horizontal, down to child
+        x_coords = [x0, x0, x1, x1]
+        y_coords = [y0_bottom, y_mid, y_mid, y1_top]
+
+        return x_coords, y_coords
+
+    def _create_network_figure(self, highlight_node: Optional[str] = None, show_lead_times: bool = True) -> go.Figure:
+        """
+        Create Plotly figure for the network with rectangular nodes
+        and orthogonal edges.
+
         Args:
             highlight_node: Node ID to highlight (if any)
-            
+            show_lead_times: Whether to show lead time circles on nodes
+
         Returns:
             Plotly figure
         """
@@ -150,121 +185,177 @@ class NetworkVisualizer:
                 plot_bgcolor='white'
             )
             return fig
-        
+
         # Calculate layout
         pos = self._calculate_hierarchical_layout()
-        
+
         # Create figure
         fig = go.Figure()
-        
-        # Add edges (BOM relationships)
-        edge_traces = []
+
+        # Add orthogonal edges (BOM relationships)
         for parent_id, child_id, data in self.network.graph.edges(data=True):
             if parent_id not in pos or child_id not in pos:
                 continue
-            
+
             x0, y0 = pos[parent_id]
             x1, y1 = pos[child_id]
-            
-            # Arrow from parent to child
+
+            # Create orthogonal path
+            x_coords, y_coords = self._create_orthogonal_edge(x0, y0, x1, y1)
+
             edge_trace = go.Scatter(
-                x=[x0, x1, None],
-                y=[y0, y1, None],
+                x=x_coords,
+                y=y_coords,
                 mode='lines',
-                line=dict(width=1, color='#888'),
+                line=dict(width=1.5, color='#666'),
                 hoverinfo='text',
                 text=f"Qty: {data['quantity']}",
                 showlegend=False
             )
-            edge_traces.append(edge_trace)
-        
-        for trace in edge_traces:
-            fig.add_trace(trace)
-        
-        # Add nodes grouped by type
-        for node_type in NodeType:
-            nodes_of_type = [
-                node for node in self.network.get_all_nodes()
-                if node.node_type == node_type and node.node_id in pos
-            ]
-            
-            if not nodes_of_type:
+            fig.add_trace(edge_trace)
+
+        # Add rectangular nodes as shapes and invisible scatter points for interaction
+        shapes = []
+        annotations = []
+        node_x = []
+        node_y = []
+        node_text = []
+        node_ids = []
+        node_labels = []
+
+        for node in self.network.get_all_nodes():
+            if node.node_id not in pos:
                 continue
-            
-            node_x = []
-            node_y = []
-            node_text = []
-            node_color = []
-            node_size = []
-            node_line_color = []
-            node_line_width = []
-            node_ids = []
-            
-            for node in nodes_of_type:
-                x, y = pos[node.node_id]
-                node_x.append(x)
-                node_y.append(y)
-                node_ids.append(node.node_id)
-                
-                # Node text (hover)
-                hover_text = (
-                    f"<b>{node.name}</b><br>"
-                    f"ID: {node.node_id}<br>"
-                    f"Type: {node.node_type.value}<br>"
-                    f"Lead Time: {node.lead_time} days<br>"
-                    f"Profile: {node.buffer_profile_name}<br>"
-                    f"Buffer: {node.buffer_status.value}"
-                )
-                if node.is_finished_product():
-                    hover_text += f"<br>Customer Tolerance: {node.customer_tolerance_time} days"
-                if node.adu is not None:
-                    hover_text += f"<br>ADU: {node.adu:.1f}"
-                
-                node_text.append(hover_text)
-                
-                # Color by type
-                node_color.append(NODE_TYPE_COLORS[node.node_type])
-                
-                # Size based on whether buffered
-                node_size.append(20 if node.is_buffered() else 15)
-                
-                # Border color by buffer status
-                node_line_color.append(BUFFER_STATUS_COLORS[node.buffer_status])
-                
-                # Highlight selected node
-                if node.node_id == highlight_node:
-                    node_line_width.append(4)
-                else:
-                    node_line_width.append(2)
-            
-            node_trace = go.Scatter(
-                x=node_x,
-                y=node_y,
-                mode='markers+text',
-                text=[node.name for node in nodes_of_type],
-                textposition='top center',
-                textfont=dict(size=8),
-                hovertext=node_text,
-                hoverinfo='text',
+
+            x, y = pos[node.node_id]
+            node_x.append(x)
+            node_y.append(y)
+            node_ids.append(node.node_id)
+            # Split node name at first space for two-line display
+            name_parts = node.name.split(' ', 1)
+            if len(name_parts) > 1:
+                label = f"<b>{name_parts[0]}<br>{name_parts[1]}</b>"
+            else:
+                label = f"<b>{node.name}</b>"
+            node_labels.append(label)
+
+            # Hover text
+            hover_text = (
+                f"<b>{node.name}</b><br>"
+                f"ID: {node.node_id}<br>"
+                f"Type: {node.node_type.value}<br>"
+                f"Lead Time: {node.lead_time} days<br>"
+                f"Profile: {node.buffer_profile_name}<br>"
+                f"Buffer: {node.buffer_status.value}"
+            )
+            if node.is_finished_product():
+                hover_text += f"<br>Customer Tolerance: {node.customer_tolerance_time} days"
+            if node.adu is not None:
+                hover_text += f"<br>ADU: {node.adu:.1f}"
+            node_text.append(hover_text)
+
+            # Rectangle dimensions
+            half_w = self.NODE_WIDTH / 2
+            half_h = self.NODE_HEIGHT / 2
+
+            # Border width based on selection
+            border_width = 3 if node.node_id == highlight_node else 1.5
+
+            # Add rectangle shape
+            shapes.append(dict(
+                type="rect",
+                x0=x - half_w,
+                y0=y - half_h,
+                x1=x + half_w,
+                y1=y + half_h,
+                fillcolor=NODE_TYPE_COLORS[node.node_type],
+                line=dict(
+                    color=BUFFER_STATUS_COLORS[node.buffer_status],
+                    width=border_width
+                ),
+                layer="below"
+            ))
+
+            # Add lead time circle outside rectangle, touching top-left corner
+            if show_lead_times:
+                # Position circle center at the top-left corner of the rectangle
+                lt_x = x - half_w
+                lt_y = y + half_h
+                shapes.append(dict(
+                    type="circle",
+                    x0=lt_x - self.LT_CIRCLE_RADIUS,
+                    y0=lt_y - self.LT_CIRCLE_RADIUS,
+                    x1=lt_x + self.LT_CIRCLE_RADIUS,
+                    y1=lt_y + self.LT_CIRCLE_RADIUS,
+                    fillcolor='white',
+                    line=dict(color='#333', width=2),
+                    layer="above"
+                ))
+                # Add lead time text annotation (bold)
+                annotations.append(dict(
+                    x=lt_x,
+                    y=lt_y,
+                    text=f"<b>{node.lead_time}</b>",
+                    showarrow=False,
+                    font=dict(size=16, color='#333'),
+                    xanchor='center',
+                    yanchor='middle'
+                ))
+
+        # Add invisible scatter for click detection and hover
+        node_trace = go.Scatter(
+            x=node_x,
+            y=node_y,
+            mode='markers+text',
+            text=node_labels,
+            textposition='middle center',
+            textfont=dict(size=18, color='white'),
+            hovertext=node_text,
+            hoverinfo='text',
+            marker=dict(
+                size=1,
+                opacity=0
+            ),
+            showlegend=False,
+            customdata=node_ids
+        )
+        fig.add_trace(node_trace)
+
+        # Add legend traces (invisible markers for legend only)
+        for node_type in NodeType:
+            fig.add_trace(go.Scatter(
+                x=[None],
+                y=[None],
+                mode='markers',
                 marker=dict(
-                    size=node_size,
-                    color=node_color,
-                    line=dict(
-                        color=node_line_color,
-                        width=node_line_width
-                    )
+                    size=15,
+                    color=NODE_TYPE_COLORS[node_type],
+                    symbol='square'
                 ),
                 name=node_type.value.replace('_', ' ').title(),
-                customdata=node_ids  # Store node IDs for click detection
-            )
-            fig.add_trace(node_trace)
-        
+                showlegend=True
+            ))
+
+        # Calculate axis ranges
+        if pos:
+            all_x = [p[0] for p in pos.values()]
+            all_y = [p[1] for p in pos.values()]
+            x_margin = self.NODE_WIDTH
+            y_margin = self.NODE_HEIGHT
+            x_range = [min(all_x) - x_margin, max(all_x) + x_margin]
+            y_range = [min(all_y) - y_margin, max(all_y) + y_margin]
+        else:
+            x_range = [-5, 5]
+            y_range = [-5, 5]
+
         # Update layout
         fig.update_layout(
             title=dict(
                 text=f"Supply Chain Network: {len(self.network)} nodes",
                 font=dict(size=16)
             ),
+            shapes=shapes,
+            annotations=annotations,
             showlegend=True,
             legend=dict(
                 orientation="v",
@@ -278,17 +369,21 @@ class NetworkVisualizer:
             xaxis=dict(
                 showgrid=False,
                 zeroline=False,
-                showticklabels=False
+                showticklabels=False,
+                range=x_range,
+                scaleanchor="y",
+                scaleratio=1
             ),
             yaxis=dict(
                 showgrid=False,
                 zeroline=False,
-                showticklabels=False
+                showticklabels=False,
+                range=y_range
             ),
             plot_bgcolor='white',
             height=700
         )
-        
+
         return fig
     
     def _build_layout(self):
@@ -298,17 +393,28 @@ class NetworkVisualizer:
             dcc.Store(id='network-data', data=None),
             dcc.Store(id='selected-node-id', data=None),
             dcc.Store(id='current-file', data=None),
+            dcc.Store(id='show-lead-times', data=True),
             
             # Header
             dbc.Row([
                 dbc.Col([
                     html.H1("DDoptim Network Viewer", className="text-primary"),
                     html.P("Interactive Supply Chain Network Visualization", className="text-muted")
-                ], width=8),
+                ], width=6),
+                dbc.Col([
+                    html.Div([
+                        dbc.Label("Show Lead Times", className="me-2", style={'font-size': '14px'}),
+                        dbc.Switch(
+                            id='toggle-lead-times',
+                            value=True,
+                            className="d-inline-block"
+                        )
+                    ], className="d-flex align-items-center justify-content-end mt-3")
+                ], width=2),
                 dbc.Col([
                     dbc.ButtonGroup([
-                        dbc.Button("📂 Load Network", id="btn-load", color="primary", className="me-2"),
-                        dbc.Button("💾 Save Network", id="btn-save", color="success"),
+                        dbc.Button("Load Network", id="btn-load", color="primary", className="me-2"),
+                        dbc.Button("Save Network", id="btn-save", color="success"),
                     ], className="float-end")
                 ], width=4)
             ], className="mb-3"),
@@ -407,42 +513,42 @@ class NetworkVisualizer:
                         dbc.Col([
                             html.H6("Node Types:", style={'font-size': '14px'}),
                             html.Div([
-                                html.Span("● ", style={'color': NODE_TYPE_COLORS[NodeType.FINISHED_PRODUCT], 'font-size': '20px'}),
+                                html.Span("\u25A0 ", style={'color': NODE_TYPE_COLORS[NodeType.FINISHED_PRODUCT], 'font-size': '16px'}),
                                 html.Span("Finished Product", style={'font-size': '12px'})
                             ]),
                             html.Div([
-                                html.Span("● ", style={'color': NODE_TYPE_COLORS[NodeType.INTERMEDIATE], 'font-size': '20px'}),
+                                html.Span("\u25A0 ", style={'color': NODE_TYPE_COLORS[NodeType.INTERMEDIATE], 'font-size': '16px'}),
                                 html.Span("Intermediate", style={'font-size': '12px'})
                             ]),
                             html.Div([
-                                html.Span("● ", style={'color': NODE_TYPE_COLORS[NodeType.MACHINED], 'font-size': '20px'}),
+                                html.Span("\u25A0 ", style={'color': NODE_TYPE_COLORS[NodeType.MACHINED], 'font-size': '16px'}),
                                 html.Span("Machined", style={'font-size': '12px'})
                             ]),
                             html.Div([
-                                html.Span("● ", style={'color': NODE_TYPE_COLORS[NodeType.PURCHASED_LOCAL], 'font-size': '20px'}),
+                                html.Span("\u25A0 ", style={'color': NODE_TYPE_COLORS[NodeType.PURCHASED_LOCAL], 'font-size': '16px'}),
                                 html.Span("Purchased Local", style={'font-size': '12px'})
                             ]),
                             html.Div([
-                                html.Span("● ", style={'color': NODE_TYPE_COLORS[NodeType.PURCHASED_INTERNATIONAL], 'font-size': '20px'}),
+                                html.Span("\u25A0 ", style={'color': NODE_TYPE_COLORS[NodeType.PURCHASED_INTERNATIONAL], 'font-size': '16px'}),
                                 html.Span("Purchased International", style={'font-size': '12px'})
                             ])
                         ], width=6),
                         dbc.Col([
                             html.H6("Buffer Status (Border):", style={'font-size': '14px'}),
                             html.Div([
-                                html.Span("◯ ", style={'color': BUFFER_STATUS_COLORS[BufferStatus.NO_BUFFER], 'font-size': '20px'}),
+                                html.Span("\u25A1 ", style={'color': BUFFER_STATUS_COLORS[BufferStatus.NO_BUFFER], 'font-size': '16px'}),
                                 html.Span("No Buffer", style={'font-size': '12px'})
                             ]),
                             html.Div([
-                                html.Span("◯ ", style={'color': BUFFER_STATUS_COLORS[BufferStatus.USER_FIXED], 'font-size': '20px'}),
+                                html.Span("\u25A1 ", style={'color': BUFFER_STATUS_COLORS[BufferStatus.USER_FIXED], 'font-size': '16px'}),
                                 html.Span("User Fixed", style={'font-size': '12px'})
                             ]),
                             html.Div([
-                                html.Span("◯ ", style={'color': BUFFER_STATUS_COLORS[BufferStatus.USER_FORBIDDEN], 'font-size': '20px'}),
+                                html.Span("\u25A1 ", style={'color': BUFFER_STATUS_COLORS[BufferStatus.USER_FORBIDDEN], 'font-size': '16px'}),
                                 html.Span("User Forbidden", style={'font-size': '12px'})
                             ]),
                             html.Div([
-                                html.Span("◯ ", style={'color': BUFFER_STATUS_COLORS[BufferStatus.ALGORITHM_RECOMMENDED], 'font-size': '20px'}),
+                                html.Span("\u25A1 ", style={'color': BUFFER_STATUS_COLORS[BufferStatus.ALGORITHM_RECOMMENDED], 'font-size': '16px'}),
                                 html.Span("Algorithm Recommended", style={'font-size': '12px'})
                             ])
                         ], width=6)
@@ -546,21 +652,25 @@ class NetworkVisualizer:
             except Exception as e:
                 return html.Div(f"✗ Error: {str(e)}", className="text-danger")
         
-        # Update graph when network loads
+        # Update graph when network loads or toggle changes
         @self.app.callback(
             [Output('network-graph', 'figure'),
              Output('network-minimap', 'figure')],
             [Input('network-data', 'data'),
-             Input('selected-node-id', 'data')]
+             Input('selected-node-id', 'data'),
+             Input('toggle-lead-times', 'value')]
         )
-        def update_graph(network_data, selected_node_id):
+        def update_graph(network_data, selected_node_id, show_lead_times):
             if network_data:
                 self.network = Network.from_dict(network_data)
-            
-            main_fig = self._create_network_figure(highlight_node=selected_node_id)
-            
-            # Mini-map (same as main but smaller and no interaction)
-            mini_fig = self._create_network_figure()
+
+            main_fig = self._create_network_figure(
+                highlight_node=selected_node_id,
+                show_lead_times=show_lead_times if show_lead_times is not None else True
+            )
+
+            # Mini-map (same as main but smaller and no interaction, no lead times)
+            mini_fig = self._create_network_figure(show_lead_times=False)
             mini_fig.update_layout(
                 showlegend=False,
                 margin=dict(l=0, r=0, t=0, b=0),
@@ -568,7 +678,7 @@ class NetworkVisualizer:
                 xaxis=dict(visible=False),
                 yaxis=dict(visible=False)
             )
-            
+
             return main_fig, mini_fig
         
         # Handle node click
