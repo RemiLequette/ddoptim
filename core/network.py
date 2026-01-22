@@ -36,6 +36,7 @@ class Network:
         """Initialize an empty supply chain network."""
         self.graph = nx.DiGraph()
         self.profiles: Dict[str, BufferProfile] = {}
+        self._auto_propagate = True  # Control automatic ADU propagation
     
     # ========== Profile Management ==========
     
@@ -158,6 +159,13 @@ class Network:
                 f"Adding edge {parent_id} -> {child_id} would create a cycle. "
                 "Supply chain must be a directed acyclic graph (DAG)."
             )
+        
+        # Propagate ADU after BOM change (if auto-propagation enabled)
+        if self._auto_propagate:
+            self.propagate_adu()
+        
+        # Propagate ADU after BOM change
+        self.propagate_adu()
     
     def get_bom_quantity(self, parent_id: str, child_id: str) -> float:
         """
@@ -288,6 +296,56 @@ class Network:
         
         return all_paths
     
+    def propagate_adu(self):
+        """
+        Propagate ADU (Average Daily Usage) through the BOM structure.
+        
+        Starting from finished products with independent_adu, calculates total ADU
+        for all components using the formula:
+        
+            adu = independent_adu + sum(parent_adu * quantity_per_parent)
+        
+        This propagates demand through the supply chain, accounting for:
+        - Independent customer demand (finished products)
+        - Dependent demand from parent items (components)
+        - BOM quantities (e.g., 2 wheels per bike)
+        - Multi-product usage (shared components)
+        
+        The calculation proceeds in topological order (finished products first)
+        to ensure parent ADU values are available when calculating child ADU.
+        
+        Modifies node.adu values in place.
+        
+        Raises:
+            ValueError: If network has cycles (not a DAG)
+        """
+        # Get reverse topological order (finished products to raw materials)
+        try:
+            order = self.get_topological_order()
+        except ValueError:
+            raise ValueError("Cannot propagate ADU: network contains cycles")
+               
+        # Propagate ADU from parents to children
+        for node_id in order:
+            node = self.get_node(node_id)
+            
+            # Start with independent ADU (0 if None)
+            node.adu = node.independent_adu if node.independent_adu is not None else 0.0
+            
+            # Get parents and their quantities
+            parents = self.get_parents(node_id)
+            
+            # Add dependent demand from all parents
+            for parent_id, quantity in parents.items():
+                parent_node = self.get_node(parent_id)
+                if parent_node.adu is not None and parent_node.adu > 0:
+                    # Add parent's demand multiplied by quantity needed
+                    node.adu += parent_node.adu * quantity
+            
+            # If final ADU is zero, set to None (no demand for this component)
+            if node.adu == 0.0:
+                node.adu = None
+    
     # ========== Validation ==========
     
     def validate(self) -> Tuple[bool, List[str]]:
@@ -379,13 +437,18 @@ class Network:
             node = NetworkNode.from_dict(node_data)
             network.add_node(node)
         
-        # Load edges
+        # Load edges (disable auto-propagation during batch loading)
+        network._auto_propagate = False
         for edge_data in data.get("edges", []):
             network.add_bom_relationship(
                 edge_data["parent_id"],
                 edge_data["child_id"],
                 edge_data["quantity"]
             )
+        network._auto_propagate = True
+        
+        # Propagate ADU through network once after all edges loaded
+        network.propagate_adu()
         
         return network
     

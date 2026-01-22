@@ -38,6 +38,7 @@ ddoptim/
 ├── data/           # Network JSON files
 └── pyproject.toml  # Project config and dependencies
 ```
+- put all test code in the tests folder
 
 ## Development Workflow
 1. Always run tests before committing: `uv run python tests/test_core_simple.py`

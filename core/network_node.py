@@ -48,9 +48,10 @@ class NetworkNode:
         # Costs
         unit_cost: Cost per unit (for inventory value calculation)
         
-        # Demand (for finished products)
+        # Demand
         customer_tolerance_time: Maximum lead time customer will accept (days, None if not customer-facing)
-        adu: Average Daily Usage/Demand (None until calculated via BOM propagation)
+        independent_adu: Independent demand from customers (set for finished products, None for components)
+        adu: Total Average Daily Usage (calculated via BOM propagation from independent demand)
         sales_order_visibility_horizon: How far ahead orders are visible (days, 0 if none)
         
         # Buffer positioning
@@ -103,9 +104,10 @@ class NetworkNode:
     # Costs
     unit_cost: float = 0.0
     
-    # Demand (for finished products)
+    # Demand
     customer_tolerance_time: Optional[int] = None  # days
-    adu: Optional[float] = None  # calculated via BOM propagation
+    independent_adu: Optional[float] = None  # customer demand (finished products only)
+    adu: Optional[float] = None  # total dependent demand (calculated via BOM propagation)
     sales_order_visibility_horizon: int = 0  # days
     
     # Buffer positioning
@@ -117,6 +119,10 @@ class NetworkNode:
     
     def __post_init__(self):
         """Validate node parameters."""
+        # If adu was provided in constructor, treat it as independent_adu
+        if self.adu is not None and self.independent_adu is None:
+            self.independent_adu = self.adu
+        
         # Validate lead time
         if self.lead_time <= 0:
             raise ValueError(f"Lead time must be > 0, got {self.lead_time} for node {self.node_id}")
@@ -195,6 +201,7 @@ class NetworkNode:
             "order_cycle": self.order_cycle,
             "unit_cost": self.unit_cost,
             "customer_tolerance_time": self.customer_tolerance_time,
+            "independent_adu": self.independent_adu,
             "adu": self.adu,
             "sales_order_visibility_horizon": self.sales_order_visibility_horizon,
             "buffer_status": self.buffer_status.value,
