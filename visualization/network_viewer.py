@@ -50,22 +50,50 @@ BUFFER_STATUS_COLORS = {
 
 class NetworkVisualizer:
     """Interactive network visualization tool."""
-    
+
+    # Default network file to load on startup
+    DEFAULT_NETWORK_FILE = 'data/weber_pignons_network.json'
+
     def __init__(self):
         """Initialize the visualizer."""
         self.network: Optional[Network] = None
         self.selected_node_id: Optional[str] = None
         self.current_file: Optional[str] = None
-        
+        self.initial_network_data: Optional[dict] = None
+
+        # Load default network on startup
+        self._load_default_network()
+
         # Create Dash app with Bootstrap theme
         self.app = dash.Dash(
             __name__,
             external_stylesheets=[dbc.themes.BOOTSTRAP]
         )
         self.app.title = "DDoptim Network Viewer"
-        
+
         self._build_layout()
         self._setup_callbacks()
+
+    def _load_default_network(self):
+        """Load the default network file on startup."""
+        try:
+            full_path = os.path.join(project_dir, self.DEFAULT_NETWORK_FILE)
+            with open(full_path, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+
+            # Validate by loading into Network
+            network = Network.from_dict(data)
+            is_valid, errors = network.validate()
+
+            if is_valid:
+                self.network = network
+                self.current_file = self.DEFAULT_NETWORK_FILE
+                self.initial_network_data = data
+                print(f"Loaded default network: {self.DEFAULT_NETWORK_FILE}")
+            else:
+                print(f"Validation errors in default network: {errors}")
+        except Exception as e:
+            print(f"Could not load default network: {e}")
     
     # Node rectangle dimensions
     NODE_WIDTH = 1.8
@@ -77,6 +105,7 @@ class NetworkVisualizer:
         """
         Calculate hierarchical tree layout for the network.
         Top-down layout with finished products at top, components below.
+        Children are grouped under their parents to minimize edge crossings.
 
         Returns:
             Dictionary mapping node_id to (x, y) coordinates (center of node)
@@ -94,7 +123,6 @@ class NetworkVisualizer:
             # Level 0 = finished products (top), higher levels = deeper in BOM
             levels = {}
             for node_id in topo_order:
-                # Get parents of this node
                 parents = self.network.get_parents(node_id)
                 if not parents:
                     levels[node_id] = 0  # Root node (finished product)
@@ -108,23 +136,135 @@ class NetworkVisualizer:
                     nodes_by_level[level] = []
                 nodes_by_level[level].append(node_id)
 
-            # Position nodes - top down (level 0 at top, higher y = lower on screen)
             max_level = max(levels.values()) if levels else 0
             y_spacing = 2.0  # Vertical spacing between levels
+            x_gap = 0.5  # Horizontal gap between nodes
 
-            for level, node_ids in nodes_by_level.items():
-                # Y coordinate: level 0 at top (high y), increasing levels go down
+            # Calculate subtree widths (bottom-up)
+            subtree_width = {}
+            for level in range(max_level, -1, -1):
+                if level not in nodes_by_level:
+                    continue
+                for node_id in nodes_by_level[level]:
+                    children = list(self.network.get_children(node_id).keys())
+                    if not children:
+                        # Leaf node
+                        subtree_width[node_id] = self.NODE_WIDTH
+                    else:
+                        # Width is sum of children's subtrees + gaps
+                        children_width = sum(subtree_width.get(c, self.NODE_WIDTH) for c in children)
+                        children_width += (len(children) - 1) * x_gap
+                        subtree_width[node_id] = max(self.NODE_WIDTH, children_width)
+
+            # Order nodes at each level to group children under parents
+            ordered_by_level = {0: list(nodes_by_level.get(0, []))}
+
+            for level in range(1, max_level + 1):
+                if level not in nodes_by_level:
+                    continue
+
+                # Group children by their primary parent (first parent in sorted order)
+                parent_children = {}
+                for node_id in nodes_by_level[level]:
+                    parents = sorted(self.network.get_parents(node_id).keys())
+                    primary_parent = parents[0] if parents else None
+                    if primary_parent not in parent_children:
+                        parent_children[primary_parent] = []
+                    parent_children[primary_parent].append(node_id)
+
+                # Order children following parent order from previous level
+                ordered_nodes = []
+                prev_level_order = ordered_by_level.get(level - 1, [])
+                for parent_id in prev_level_order:
+                    if parent_id in parent_children:
+                        # Sort children alphabetically within each parent group
+                        ordered_nodes.extend(sorted(parent_children[parent_id]))
+                        del parent_children[parent_id]
+
+                # Add any orphaned nodes (shouldn't happen but just in case)
+                for remaining in parent_children.values():
+                    ordered_nodes.extend(sorted(remaining))
+
+                ordered_by_level[level] = ordered_nodes
+
+            # Position nodes (top-down), centering children under parents
+            x_positions = {}
+
+            # First pass: assign initial x positions based on subtree width
+            for level in range(max_level + 1):
+                if level not in ordered_by_level:
+                    continue
+
+                nodes = ordered_by_level[level]
+                if level == 0:
+                    # Position root nodes
+                    current_x = 0
+                    for node_id in nodes:
+                        width = subtree_width.get(node_id, self.NODE_WIDTH)
+                        x_positions[node_id] = current_x + width / 2
+                        current_x += width + x_gap
+                    # Center the roots
+                    total_width = current_x - x_gap
+                    offset = total_width / 2
+                    for node_id in nodes:
+                        x_positions[node_id] -= offset
+                else:
+                    # Position children centered under their parents
+                    # Group by primary parent
+                    parent_children = {}
+                    for node_id in nodes:
+                        parents = sorted(self.network.get_parents(node_id).keys())
+                        primary_parent = parents[0] if parents else None
+                        if primary_parent not in parent_children:
+                            parent_children[primary_parent] = []
+                        parent_children[primary_parent].append(node_id)
+
+                    for parent_id, children in parent_children.items():
+                        if parent_id is None:
+                            continue
+                        parent_x = x_positions.get(parent_id, 0)
+                        # Calculate total width of children
+                        total_children_width = sum(subtree_width.get(c, self.NODE_WIDTH) for c in children)
+                        total_children_width += (len(children) - 1) * x_gap
+                        # Center children under parent
+                        start_x = parent_x - total_children_width / 2
+                        for child_id in children:
+                            child_width = subtree_width.get(child_id, self.NODE_WIDTH)
+                            x_positions[child_id] = start_x + child_width / 2
+                            start_x += child_width + x_gap
+
+            # Second pass: resolve overlaps within each level
+            for level in range(max_level + 1):
+                if level not in ordered_by_level:
+                    continue
+                nodes = ordered_by_level[level]
+                if len(nodes) <= 1:
+                    continue
+
+                # Sort by x position
+                nodes_sorted = sorted(nodes, key=lambda n: x_positions.get(n, 0))
+                min_gap = self.NODE_WIDTH + x_gap
+
+                # Push nodes apart if they overlap
+                for i in range(1, len(nodes_sorted)):
+                    prev_node = nodes_sorted[i - 1]
+                    curr_node = nodes_sorted[i]
+                    prev_x = x_positions[prev_node]
+                    curr_x = x_positions[curr_node]
+                    if curr_x - prev_x < min_gap:
+                        x_positions[curr_node] = prev_x + min_gap
+
+                # Re-center the level
+                xs = [x_positions[n] for n in nodes]
+                center = (min(xs) + max(xs)) / 2
+                for node_id in nodes:
+                    x_positions[node_id] -= center
+
+            # Build final positions
+            for node_id, level in levels.items():
                 y = (max_level - level) * y_spacing
-
-                # X coordinates spread evenly
-                num_nodes = len(node_ids)
-                x_gap = 1.0  # Horizontal gap between nodes
-                total_width = num_nodes * self.NODE_WIDTH + (num_nodes - 1) * x_gap
-                start_x = -total_width / 2 + self.NODE_WIDTH / 2
-
-                for i, node_id in enumerate(sorted(node_ids)):
-                    x = start_x + i * (self.NODE_WIDTH + x_gap)
-                    pos[node_id] = (x, y)
+                x = x_positions.get(node_id, 0)
+                pos[node_id] = (x, y)
 
         except Exception as e:
             print(f"Error calculating layout: {e}")
@@ -381,7 +521,9 @@ class NetworkVisualizer:
                 range=y_range
             ),
             plot_bgcolor='white',
-            height=700
+            height=700,
+            uirevision='network',  # Preserve zoom/pan state across updates
+            dragmode='pan'  # Default to pan mode, click to select nodes
         )
 
         return fig
@@ -390,9 +532,9 @@ class NetworkVisualizer:
         """Build the Dash app layout."""
         
         self.app.layout = dbc.Container([
-            dcc.Store(id='network-data', data=None),
+            dcc.Store(id='network-data', data=self.initial_network_data),
             dcc.Store(id='selected-node-id', data=None),
-            dcc.Store(id='current-file', data=None),
+            dcc.Store(id='current-file', data=self.current_file),
             dcc.Store(id='show-lead-times', data=True),
             
             # Header
@@ -435,21 +577,12 @@ class NetworkVisualizer:
                                 config={
                                     'displayModeBar': True,
                                     'displaylogo': False,
+                                    'modeBarButtonsToRemove': ['select2d', 'lasso2d', 'autoScale2d'],
                                     'modeBarButtonsToAdd': ['pan2d', 'zoomIn2d', 'zoomOut2d', 'resetScale2d']
                                 }
                             )
                         ]
-                    ),
-                    
-                    # Mini-map (overview)
-                    html.Div([
-                        html.H6("Overview", className="text-muted"),
-                        dcc.Graph(
-                            id='network-minimap',
-                            style={'height': '200px', 'border': '1px solid #ddd'},
-                            config={'displayModeBar': False, 'staticPlot': True}
-                        )
-                    ], className="mt-3")
+                    )
                 ], width=8),
                 
                 # Right panel - Node details
@@ -654,8 +787,7 @@ class NetworkVisualizer:
         
         # Update graph when network loads or toggle changes
         @self.app.callback(
-            [Output('network-graph', 'figure'),
-             Output('network-minimap', 'figure')],
+            Output('network-graph', 'figure'),
             [Input('network-data', 'data'),
              Input('selected-node-id', 'data'),
              Input('toggle-lead-times', 'value')]
@@ -669,17 +801,7 @@ class NetworkVisualizer:
                 show_lead_times=show_lead_times if show_lead_times is not None else True
             )
 
-            # Mini-map (same as main but smaller and no interaction, no lead times)
-            mini_fig = self._create_network_figure(show_lead_times=False)
-            mini_fig.update_layout(
-                showlegend=False,
-                margin=dict(l=0, r=0, t=0, b=0),
-                height=200,
-                xaxis=dict(visible=False),
-                yaxis=dict(visible=False)
-            )
-
-            return main_fig, mini_fig
+            return main_fig
         
         # Handle node click
         @self.app.callback(
