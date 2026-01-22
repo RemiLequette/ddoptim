@@ -1,0 +1,13 @@
+# This project uses uv for package management
+# Dependencies are managed in pyproject.toml
+
+# To install dependencies:
+#   uv sync
+
+# To add a new dependency:
+#   uv add <package>
+
+# To run scripts:
+#   uv run python <script.py>
+
+# See pyproject.toml for the full list of dependencies
