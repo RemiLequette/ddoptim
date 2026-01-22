@@ -1,0 +1,668 @@
+{
+  "profiles": {
+    "F": {
+      "name": "F",
+      "description": "Fabriqués (Manufactured/Finished) - Low variability, predictable demand",
+      "dlt_threshold_short": 1,
+      "dlt_threshold_medium": 3,
+      "dlt_threshold_long": 7,
+      "lead_time_factor_short": 0.7,
+      "lead_time_factor_medium": 0.5,
+      "lead_time_factor_long": 0.25,
+      "variability_factor": 0.25
+    },
+    "I": {
+      "name": "I",
+      "description": "Intermédiaires (Semi-finished) - Low variability, internal control",
+      "dlt_threshold_short": 1,
+      "dlt_threshold_medium": 3,
+      "dlt_threshold_long": 7,
+      "lead_time_factor_short": 0.7,
+      "lead_time_factor_medium": 0.5,
+      "lead_time_factor_long": 0.25,
+      "variability_factor": 0.25
+    },
+    "U": {
+      "name": "U",
+      "description": "Usinés (Machined) - Medium variability, capacity constraints, spare parts demand",
+      "dlt_threshold_short": 1,
+      "dlt_threshold_medium": 5,
+      "dlt_threshold_long": 21,
+      "lead_time_factor_short": 0.7,
+      "lead_time_factor_medium": 0.5,
+      "lead_time_factor_long": 0.25,
+      "variability_factor": 0.5
+    },
+    "AL": {
+      "name": "AL",
+      "description": "Achetés Local (Purchased Local) - Medium variability, generally reliable",
+      "dlt_threshold_short": 1,
+      "dlt_threshold_medium": 3,
+      "dlt_threshold_long": 7,
+      "lead_time_factor_short": 0.7,
+      "lead_time_factor_medium": 0.5,
+      "lead_time_factor_long": 0.25,
+      "variability_factor": 0.5
+    },
+    "AI": {
+      "name": "AI",
+      "description": "Achetés International - High variability, long lead times, transport delays",
+      "dlt_threshold_short": 1,
+      "dlt_threshold_medium": 5,
+      "dlt_threshold_long": 21,
+      "lead_time_factor_short": 0.7,
+      "lead_time_factor_medium": 0.5,
+      "lead_time_factor_long": 0.25,
+      "variability_factor": 0.7
+    }
+  },
+  "nodes": [
+    {
+      "node_id": "BIKE_SUPERVELO",
+      "name": "Vélo SUPERVELO",
+      "node_type": "finished_product",
+      "lead_time": 5,
+      "buffer_profile_name": "F",
+      "moq": 0,
+      "order_cycle": 0,
+      "unit_cost": 500.0,
+      "customer_tolerance_time": 5,
+      "adu": 40.0,
+      "sales_order_visibility_horizon": 7,
+      "buffer_status": "no_buffer",
+      "buffer_rationale": "",
+      "metadata": {
+        "description": "Custom assembled bikes for SUPERVELO brand",
+        "production_type": "FTO (Finish To Order)",
+        "seasonal_adjustment": "85% winter, 130% summer"
+      }
+    },
+    {
+      "node_id": "ROUE",
+      "name": "Roue (Wheel)",
+      "node_type": "intermediate",
+      "lead_time": 4,
+      "buffer_profile_name": "I",
+      "moq": 200,
+      "order_cycle": 0,
+      "unit_cost": 50.0,
+      "customer_tolerance_time": null,
+      "adu": null,
+      "sales_order_visibility_horizon": 0,
+      "buffer_status": "no_buffer",
+      "buffer_rationale": "",
+      "metadata": {
+        "description": "Wheel assembly - bottleneck operation",
+        "note": "Complex assembly, 2 per bike, skilled labor required"
+      }
+    },
+    {
+      "node_id": "E_CADRE",
+      "name": "E-Cadre (Frame Assembly)",
+      "node_type": "intermediate",
+      "lead_time": 4,
+      "buffer_profile_name": "I",
+      "moq": 0,
+      "order_cycle": 0,
+      "unit_cost": 80.0,
+      "customer_tolerance_time": null,
+      "adu": null,
+      "sales_order_visibility_horizon": 0,
+      "buffer_status": "no_buffer",
+      "buffer_rationale": "",
+      "metadata": {
+        "description": "Frame with mounted components"
+      }
+    },
+    {
+      "node_id": "E_GUIDON",
+      "name": "E-Guidon (Handlebar Assembly)",
+      "node_type": "intermediate",
+      "lead_time": 3,
+      "buffer_profile_name": "I",
+      "moq": 0,
+      "order_cycle": 0,
+      "unit_cost": 25.0,
+      "customer_tolerance_time": null,
+      "adu": null,
+      "sales_order_visibility_horizon": 0,
+      "buffer_status": "no_buffer",
+      "buffer_rationale": "",
+      "metadata": {
+        "description": "Handlebar with grips and brakes"
+      }
+    },
+    {
+      "node_id": "E_SELLE",
+      "name": "E-Selle (Saddle Assembly)",
+      "node_type": "intermediate",
+      "lead_time": 2,
+      "buffer_profile_name": "I",
+      "moq": 0,
+      "order_cycle": 7,
+      "unit_cost": 20.0,
+      "customer_tolerance_time": null,
+      "adu": null,
+      "sales_order_visibility_horizon": 0,
+      "buffer_status": "no_buffer",
+      "buffer_rationale": "",
+      "metadata": {
+        "description": "Saddle with post",
+        "note": "Produced once per week in batches"
+      }
+    },
+    {
+      "node_id": "PLATEAU",
+      "name": "Plateau (Chainring)",
+      "node_type": "machined",
+      "lead_time": 8,
+      "buffer_profile_name": "U",
+      "moq": 300,
+      "order_cycle": 0,
+      "unit_cost": 15.0,
+      "customer_tolerance_time": null,
+      "adu": null,
+      "sales_order_visibility_horizon": 0,
+      "buffer_status": "no_buffer",
+      "buffer_rationale": "",
+      "metadata": {
+        "description": "Machined chainring",
+        "spare_parts": true,
+        "spare_parts_adjustment": 1.05
+      }
+    },
+    {
+      "node_id": "PIGNON",
+      "name": "Pignon (Sprocket)",
+      "node_type": "machined",
+      "lead_time": 8,
+      "buffer_profile_name": "U",
+      "moq": 300,
+      "order_cycle": 0,
+      "unit_cost": 12.0,
+      "customer_tolerance_time": null,
+      "adu": null,
+      "sales_order_visibility_horizon": 0,
+      "buffer_status": "no_buffer",
+      "buffer_rationale": "",
+      "metadata": {
+        "description": "Machined sprocket",
+        "spare_parts": true,
+        "spare_parts_adjustment": 1.05
+      }
+    },
+    {
+      "node_id": "CHAINE",
+      "name": "Chaîne (Chain)",
+      "node_type": "machined",
+      "lead_time": 5,
+      "buffer_profile_name": "U",
+      "moq": 0,
+      "order_cycle": 0,
+      "unit_cost": 10.0,
+      "customer_tolerance_time": null,
+      "adu": null,
+      "sales_order_visibility_horizon": 0,
+      "buffer_status": "no_buffer",
+      "buffer_rationale": "",
+      "metadata": {
+        "description": "Chain assembly",
+        "spare_parts": true,
+        "spare_parts_adjustment": 1.05
+      }
+    },
+    {
+      "node_id": "MPA",
+      "name": "MP A (Machined Parts Assembly A)",
+      "node_type": "machined",
+      "lead_time": 15,
+      "buffer_profile_name": "U",
+      "moq": 0,
+      "order_cycle": 0,
+      "unit_cost": 5.0,
+      "customer_tolerance_time": null,
+      "adu": null,
+      "sales_order_visibility_horizon": 0,
+      "buffer_status": "no_buffer",
+      "buffer_rationale": "",
+      "metadata": {
+        "description": "Intermediate machined assembly"
+      }
+    },
+    {
+      "node_id": "MPB",
+      "name": "MP B (Machined Parts Assembly B)",
+      "node_type": "machined",
+      "lead_time": 15,
+      "buffer_profile_name": "U",
+      "moq": 0,
+      "order_cycle": 0,
+      "unit_cost": 5.0,
+      "customer_tolerance_time": null,
+      "adu": null,
+      "sales_order_visibility_horizon": 0,
+      "buffer_status": "no_buffer",
+      "buffer_rationale": "",
+      "metadata": {
+        "description": "Intermediate machined assembly"
+      }
+    },
+    {
+      "node_id": "CADRE",
+      "name": "Cadre (Frame)",
+      "node_type": "purchased_local",
+      "lead_time": 7,
+      "buffer_profile_name": "AL",
+      "moq": 0,
+      "order_cycle": 0,
+      "unit_cost": 70.0,
+      "customer_tolerance_time": null,
+      "adu": null,
+      "sales_order_visibility_horizon": 0,
+      "buffer_status": "no_buffer",
+      "buffer_rationale": "",
+      "metadata": {
+        "description": "Bicycle frame from local supplier",
+        "note": "Long lead time local supplier - leverage point for DLT reduction"
+      }
+    },
+    {
+      "node_id": "PEDALIER",
+      "name": "Pédalier (Pedal Assembly)",
+      "node_type": "purchased_local",
+      "lead_time": 15,
+      "buffer_profile_name": "AL",
+      "moq": 0,
+      "order_cycle": 0,
+      "unit_cost": 20.0,
+      "customer_tolerance_time": null,
+      "adu": null,
+      "sales_order_visibility_horizon": 0,
+      "buffer_status": "no_buffer",
+      "buffer_rationale": "",
+      "metadata": {
+        "description": "Pedal assembly from local supplier"
+      }
+    },
+    {
+      "node_id": "GUIDON",
+      "name": "Guidon (Handlebar)",
+      "node_type": "purchased_local",
+      "lead_time": 5,
+      "buffer_profile_name": "AL",
+      "moq": 0,
+      "order_cycle": 0,
+      "unit_cost": 15.0,
+      "customer_tolerance_time": null,
+      "adu": null,
+      "sales_order_visibility_horizon": 0,
+      "buffer_status": "no_buffer",
+      "buffer_rationale": "",
+      "metadata": {
+        "description": "Handlebar from local supplier"
+      }
+    },
+    {
+      "node_id": "POIGNEE",
+      "name": "Poignée (Grips)",
+      "node_type": "purchased_local",
+      "lead_time": 8,
+      "buffer_profile_name": "AL",
+      "moq": 0,
+      "order_cycle": 0,
+      "unit_cost": 5.0,
+      "customer_tolerance_time": null,
+      "adu": null,
+      "sales_order_visibility_horizon": 0,
+      "buffer_status": "no_buffer",
+      "buffer_rationale": "",
+      "metadata": {
+        "description": "Handlebar grips"
+      }
+    },
+    {
+      "node_id": "FREIN",
+      "name": "Frein (Brakes)",
+      "node_type": "purchased_local",
+      "lead_time": 2,
+      "buffer_profile_name": "AL",
+      "moq": 0,
+      "order_cycle": 0,
+      "unit_cost": 18.0,
+      "customer_tolerance_time": null,
+      "adu": null,
+      "sales_order_visibility_horizon": 0,
+      "buffer_status": "no_buffer",
+      "buffer_rationale": "",
+      "metadata": {
+        "description": "Brake system"
+      }
+    },
+    {
+      "node_id": "SELLE",
+      "name": "Selle (Saddle)",
+      "node_type": "purchased_local",
+      "lead_time": 2,
+      "buffer_profile_name": "AL",
+      "moq": 0,
+      "order_cycle": 0,
+      "unit_cost": 15.0,
+      "customer_tolerance_time": null,
+      "adu": null,
+      "sales_order_visibility_horizon": 0,
+      "buffer_status": "no_buffer",
+      "buffer_rationale": "",
+      "metadata": {
+        "description": "Bicycle saddle"
+      }
+    },
+    {
+      "node_id": "TIGE",
+      "name": "Tige (Seatpost)",
+      "node_type": "purchased_local",
+      "lead_time": 2,
+      "buffer_profile_name": "AL",
+      "moq": 0,
+      "order_cycle": 0,
+      "unit_cost": 8.0,
+      "customer_tolerance_time": null,
+      "adu": null,
+      "sales_order_visibility_horizon": 0,
+      "buffer_status": "no_buffer",
+      "buffer_rationale": "",
+      "metadata": {
+        "description": "Saddle post"
+      }
+    },
+    {
+      "node_id": "RAYONS",
+      "name": "Rayons (Spokes)",
+      "node_type": "purchased_international",
+      "lead_time": 15,
+      "buffer_profile_name": "AI",
+      "moq": 5000,
+      "order_cycle": 30,
+      "unit_cost": 0.5,
+      "customer_tolerance_time": null,
+      "adu": null,
+      "sales_order_visibility_horizon": 0,
+      "buffer_status": "no_buffer",
+      "buffer_rationale": "",
+      "metadata": {
+        "description": "Spokes from Asia",
+        "note": "High variability - maritime transport delays, quality issues"
+      }
+    },
+    {
+      "node_id": "PNEU",
+      "name": "Pneu (Tire)",
+      "node_type": "purchased_international",
+      "lead_time": 30,
+      "buffer_profile_name": "AI",
+      "moq": 0,
+      "order_cycle": 30,
+      "unit_cost": 8.0,
+      "customer_tolerance_time": null,
+      "adu": null,
+      "sales_order_visibility_horizon": 0,
+      "buffer_status": "no_buffer",
+      "buffer_rationale": "",
+      "metadata": {
+        "description": "Tires from Asia"
+      }
+    },
+    {
+      "node_id": "JANTE",
+      "name": "Jante (Rim)",
+      "node_type": "purchased_international",
+      "lead_time": 10,
+      "buffer_profile_name": "AI",
+      "moq": 0,
+      "order_cycle": 30,
+      "unit_cost": 12.0,
+      "customer_tolerance_time": null,
+      "adu": null,
+      "sales_order_visibility_horizon": 0,
+      "buffer_status": "no_buffer",
+      "buffer_rationale": "",
+      "metadata": {
+        "description": "Wheel rims from Asia"
+      }
+    },
+    {
+      "node_id": "VALVE",
+      "name": "Valve",
+      "node_type": "purchased_international",
+      "lead_time": 5,
+      "buffer_profile_name": "AI",
+      "moq": 0,
+      "order_cycle": 0,
+      "unit_cost": 1.0,
+      "customer_tolerance_time": null,
+      "adu": null,
+      "sales_order_visibility_horizon": 0,
+      "buffer_status": "no_buffer",
+      "buffer_rationale": "",
+      "metadata": {
+        "description": "Tire valve"
+      }
+    },
+    {
+      "node_id": "REFLECTEUR",
+      "name": "Réflecteur (Reflector)",
+      "node_type": "purchased_international",
+      "lead_time": 5,
+      "buffer_profile_name": "AI",
+      "moq": 0,
+      "order_cycle": 0,
+      "unit_cost": 1.5,
+      "customer_tolerance_time": null,
+      "adu": null,
+      "sales_order_visibility_horizon": 0,
+      "buffer_status": "no_buffer",
+      "buffer_rationale": "",
+      "metadata": {
+        "description": "Wheel reflector"
+      }
+    },
+    {
+      "node_id": "ACIER_VMI",
+      "name": "Acier VMI (Steel)",
+      "node_type": "purchased_local",
+      "lead_time": 12,
+      "buffer_profile_name": "AL",
+      "moq": 0,
+      "order_cycle": 0,
+      "unit_cost": 3.0,
+      "customer_tolerance_time": null,
+      "adu": null,
+      "sales_order_visibility_horizon": 0,
+      "buffer_status": "no_buffer",
+      "buffer_rationale": "",
+      "metadata": {
+        "description": "Steel for machining - Vendor Managed Inventory"
+      }
+    },
+    {
+      "node_id": "DOUILLE",
+      "name": "Douille (Bushing)",
+      "node_type": "purchased_local",
+      "lead_time": 8,
+      "buffer_profile_name": "AL",
+      "moq": 0,
+      "order_cycle": 0,
+      "unit_cost": 2.0,
+      "customer_tolerance_time": null,
+      "adu": null,
+      "sales_order_visibility_horizon": 0,
+      "buffer_status": "no_buffer",
+      "buffer_rationale": "",
+      "metadata": {
+        "description": "Bushing for machined parts"
+      }
+    },
+    {
+      "node_id": "AXE",
+      "name": "Axe (Axle)",
+      "node_type": "purchased_local",
+      "lead_time": 10,
+      "buffer_profile_name": "AL",
+      "moq": 0,
+      "order_cycle": 0,
+      "unit_cost": 4.0,
+      "customer_tolerance_time": null,
+      "adu": null,
+      "sales_order_visibility_horizon": 0,
+      "buffer_status": "no_buffer",
+      "buffer_rationale": "",
+      "metadata": {
+        "description": "Axle for wheel assembly"
+      }
+    },
+    {
+      "node_id": "ROULEAU",
+      "name": "Rouleau (Bearing)",
+      "node_type": "purchased_local",
+      "lead_time": 12,
+      "buffer_profile_name": "AL",
+      "moq": 0,
+      "order_cycle": 0,
+      "unit_cost": 3.5,
+      "customer_tolerance_time": null,
+      "adu": null,
+      "sales_order_visibility_horizon": 0,
+      "buffer_status": "no_buffer",
+      "buffer_rationale": "",
+      "metadata": {
+        "description": "Bearing for wheel assembly"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "parent_id": "BIKE_SUPERVELO",
+      "child_id": "ROUE",
+      "quantity": 2
+    },
+    {
+      "parent_id": "BIKE_SUPERVELO",
+      "child_id": "E_CADRE",
+      "quantity": 1
+    },
+    {
+      "parent_id": "BIKE_SUPERVELO",
+      "child_id": "E_GUIDON",
+      "quantity": 1
+    },
+    {
+      "parent_id": "BIKE_SUPERVELO",
+      "child_id": "E_SELLE",
+      "quantity": 1
+    },
+    {
+      "parent_id": "ROUE",
+      "child_id": "RAYONS",
+      "quantity": 72
+    },
+    {
+      "parent_id": "ROUE",
+      "child_id": "PNEU",
+      "quantity": 1
+    },
+    {
+      "parent_id": "ROUE",
+      "child_id": "JANTE",
+      "quantity": 1
+    },
+    {
+      "parent_id": "ROUE",
+      "child_id": "VALVE",
+      "quantity": 1
+    },
+    {
+      "parent_id": "ROUE",
+      "child_id": "REFLECTEUR",
+      "quantity": 2
+    },
+    {
+      "parent_id": "E_CADRE",
+      "child_id": "CADRE",
+      "quantity": 1
+    },
+    {
+      "parent_id": "E_CADRE",
+      "child_id": "PEDALIER",
+      "quantity": 2
+    },
+    {
+      "parent_id": "E_CADRE",
+      "child_id": "PLATEAU",
+      "quantity": 3
+    },
+    {
+      "parent_id": "E_CADRE",
+      "child_id": "PIGNON",
+      "quantity": 5
+    },
+    {
+      "parent_id": "E_CADRE",
+      "child_id": "CHAINE",
+      "quantity": 1
+    },
+    {
+      "parent_id": "E_GUIDON",
+      "child_id": "GUIDON",
+      "quantity": 1
+    },
+    {
+      "parent_id": "E_GUIDON",
+      "child_id": "POIGNEE",
+      "quantity": 2
+    },
+    {
+      "parent_id": "E_GUIDON",
+      "child_id": "FREIN",
+      "quantity": 2
+    },
+    {
+      "parent_id": "E_SELLE",
+      "child_id": "SELLE",
+      "quantity": 1
+    },
+    {
+      "parent_id": "E_SELLE",
+      "child_id": "TIGE",
+      "quantity": 1
+    },
+    {
+      "parent_id": "PLATEAU",
+      "child_id": "MPA",
+      "quantity": 3
+    },
+    {
+      "parent_id": "PIGNON",
+      "child_id": "MPB",
+      "quantity": 5
+    },
+    {
+      "parent_id": "MPA",
+      "child_id": "ACIER_VMI",
+      "quantity": 3
+    },
+    {
+      "parent_id": "MPB",
+      "child_id": "DOUILLE",
+      "quantity": 80
+    },
+    {
+      "parent_id": "MPB",
+      "child_id": "AXE",
+      "quantity": 80
+    },
+    {
+      "parent_id": "MPB",
+      "child_id": "ROULEAU",
+      "quantity": 80
+    }
+  ]
+}
