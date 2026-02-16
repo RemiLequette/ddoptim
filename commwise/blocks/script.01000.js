@@ -1,4 +1,4 @@
-﻿// AUDITOR:LARGE_BLOCK_JUSTIFIED - Unified model library data store
+// AUDITOR:LARGE_BLOCK_JUSTIFIED - Unified model library data store
 // Model Library - JSON Data Store
 // All network models stored as JSON. Populated dynamically from WEBER_PIGNONS_NETWORK.
 

@@ -1,4 +1,4 @@
-﻿<!--
+<!--
 # DDoptim TODO List
 
 ## ðŸŽ¯ CURRENT FOCUS (2025-02-06)

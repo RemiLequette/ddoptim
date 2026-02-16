@@ -1,4 +1,4 @@
-﻿// Weber Pignons Network Data
+// Weber Pignons Network Data
 // Reference case study: Bicycle assembly company (~1000 bikes/month, 1500 in summer)
 
 const WEBER_PIGNONS_NETWORK = {

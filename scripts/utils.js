@@ -8,7 +8,8 @@ export const EXPORT_DIR = path.join(ROOT, ".local", "exports");
 
 export async function readJsonFile(filePath) {
   const text = await readFile(filePath, "utf8");
-  return JSON.parse(text);
+  const normalized = text.charCodeAt(0) === 0xfeff ? text.slice(1) : text;
+  return JSON.parse(normalized);
 }
 
 export async function writeJsonFile(filePath, payload) {

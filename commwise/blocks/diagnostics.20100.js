@@ -1,4 +1,4 @@
-﻿(function() {
+(function() {
   console.log('[RLT Test] Starting algorithm test...');
   
   const tests = [];

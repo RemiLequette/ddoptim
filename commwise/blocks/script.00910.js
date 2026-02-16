@@ -1,4 +1,4 @@
-﻿// UI Event Handlers - Basic Parameter Handlers
+// UI Event Handlers - Basic Parameter Handlers
 window.UIHandlers_BasicParams = (function() {
   
   function handleIndependentADUChange(nodeId, newValue) {

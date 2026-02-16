@@ -1,4 +1,4 @@
-﻿// DDMRP Buffer Profile Definitions
+// DDMRP Buffer Profile Definitions
 // Each profile defines DLT thresholds and factors for buffer sizing
 
 const BUFFER_PROFILES = {

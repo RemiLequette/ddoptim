@@ -1,4 +1,4 @@
-﻿// Network Renderer Module
+// Network Renderer Module
 const NetworkRenderer = (function() {
   let svg, g, zoom, nodes, links;
   let simulation;

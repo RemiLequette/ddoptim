@@ -1,4 +1,4 @@
-﻿// SCRIPT 900: UI Core Module - State & Event Handlers
+// SCRIPT 900: UI Core Module - State & Event Handlers
 
 // Initialize DDOptim global state if not already initialized
 if (!window.DDOptim) {

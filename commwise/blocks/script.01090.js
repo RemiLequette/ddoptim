@@ -1,4 +1,4 @@
-﻿// Unified Model Loader
+// Unified Model Loader
 // Shared by model selector and JSON file import
 
 window.ModelLoader = {

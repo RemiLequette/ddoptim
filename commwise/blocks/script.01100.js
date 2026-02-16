@@ -1,4 +1,4 @@
-﻿// Model Selector Event Handler
+// Model Selector Event Handler
 (function() {
     console.log('ðŸ”§ Model Selector: Initializing event handlers...');
     

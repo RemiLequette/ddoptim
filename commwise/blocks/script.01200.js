@@ -1,4 +1,4 @@
-﻿// DDoptim Initialization
+// DDoptim Initialization
 // Load Simple Chain model by default on startup
 
 (function() {

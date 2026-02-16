@@ -1,4 +1,4 @@
-﻿// DDMRP Buffer Sizing Calculator
+// DDMRP Buffer Sizing Calculator
 // Calculates Red/Yellow/Green zones for inventory estimation
 // Formula: Average Stock = Red + (Green / 2)
 

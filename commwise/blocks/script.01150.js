@@ -1,4 +1,4 @@
-﻿// JSON Export Module - Captures complete model state
+// JSON Export Module - Captures complete model state
 // Exports: nodes, BOM, user modifications (ADU, lead times, buffers, costs, etc.)
 // ONLY SAVES USER INPUT - calculated values are recomputed on import
 

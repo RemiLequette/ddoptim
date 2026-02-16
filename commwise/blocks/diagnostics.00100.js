@@ -1,4 +1,4 @@
-﻿// LIVE DIAGNOSTIC: ADU Propagation Validation
+// LIVE DIAGNOSTIC: ADU Propagation Validation
 // Tests ADU propagation against Excel reference values (summer scenario, 1.3 adjustment)
 
 (function() {

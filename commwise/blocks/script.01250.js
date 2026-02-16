@@ -1,4 +1,4 @@
-﻿// Debug Status Logger
+// Debug Status Logger
 setTimeout(() => {
   console.log('\n=== DDoptim Status Check (2s after load) ===');
   console.log('D3.js:', typeof d3 !== 'undefined' ? `v${d3.version}` : 'NOT LOADED');

@@ -1,4 +1,4 @@
-﻿// Delivery Lead Time Calculator
+// Delivery Lead Time Calculator
 // Computes deliveryLeadTime and missingCustomerLeadTime for customer-facing nodes
 // These are runtime-only computed attributes (not persisted to JSON)
 

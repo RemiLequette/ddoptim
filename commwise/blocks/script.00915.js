@@ -1,4 +1,4 @@
-﻿// UI Event Handlers - Constraint Handlers
+// UI Event Handlers - Constraint Handlers
 window.UIHandlers_Constraints = (function() {
   
   function handleMOQChange(nodeId, newValue) {

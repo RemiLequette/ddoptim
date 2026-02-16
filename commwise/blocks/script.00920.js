@@ -1,4 +1,4 @@
-﻿// UI Event Handlers - Buffer Decision Handlers
+// UI Event Handlers - Buffer Decision Handlers
 window.UIHandlers_BufferDecisions = (function() {
   
   // Helper: Recalculate buffer sizing for all buffered nodes

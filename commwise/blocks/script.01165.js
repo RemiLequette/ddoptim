@@ -1,4 +1,4 @@
-﻿// Export/Import Button Handlers
+// Export/Import Button Handlers
 // Wires up UI buttons to JSONExport and JSONImport modules
 
 (function() {

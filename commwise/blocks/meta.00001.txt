@@ -1,4 +1,4 @@
-﻿<!--
+<!--
 # DDoptim - DDMRP Buffer Positioning Optimizer
 
 ## Project Overview

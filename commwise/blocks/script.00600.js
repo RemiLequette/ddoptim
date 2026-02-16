@@ -1,4 +1,4 @@
-﻿// CLT (Cumulative Lead Time) Calculator
+// CLT (Cumulative Lead Time) Calculator
 // Calculates longest path from raw materials to each node (unbuffered baseline)
 // Bottom-up calculation: children before parents (reverse topological order)
 // Formula: CLT = leadTime + MAX(child CLT)

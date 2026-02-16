@@ -1,4 +1,4 @@
-﻿// ADU Propagation Algorithm
+// ADU Propagation Algorithm
 // Calculates total ADU for all nodes: calculatedADU = independentADU + dependent demand from parents
 // Top-down propagation: finished goods â†’ intermediates â†’ components
 

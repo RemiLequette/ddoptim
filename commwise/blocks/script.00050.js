@@ -1,4 +1,4 @@
-﻿/**
+/**
  * SETTINGS Module - Settings Modal Controller
  *
  * Handles the settings modal open/close behavior.

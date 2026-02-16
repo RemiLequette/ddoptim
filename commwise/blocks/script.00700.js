@@ -1,4 +1,4 @@
-﻿// DLT (Decoupled Lead Time) Calculator
+// DLT (Decoupled Lead Time) Calculator
 // Calculates lead time from nearest buffer (or raw material) to each node
 // Bottom-up calculation: children before parents (reverse topological order)
 // Formula: DLT = leadTime + MAX(child DLT for unbuffered children only)

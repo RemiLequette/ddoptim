@@ -1,4 +1,4 @@
-﻿// JSON Import Module
+// JSON Import Module
 // Import network configuration from JSON file
 
 window.JSONImport = {

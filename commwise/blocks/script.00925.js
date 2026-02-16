@@ -1,4 +1,4 @@
-﻿// UI Event Handlers - Customer Lead Time Handler
+// UI Event Handlers - Customer Lead Time Handler
 window.UIHandlers_CustomerLeadTime = (function() {
   
   function handleCustomerLeadTimeChange(nodeId, newValue) {

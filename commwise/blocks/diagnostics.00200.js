@@ -1,4 +1,4 @@
-﻿// LIVE DIAGNOSTIC: CLT/DLT Validation
+// LIVE DIAGNOSTIC: CLT/DLT Validation
 // Tests CLT and DLT calculations against expected values
 
 (function() {

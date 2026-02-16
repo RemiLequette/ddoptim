@@ -1,4 +1,4 @@
-﻿// UI Event Handlers - Detail Panel Renderer
+// UI Event Handlers - Detail Panel Renderer
 (function() {
   // Show node details in panel with editable controls
   function showNodeDetails(nodeId) {

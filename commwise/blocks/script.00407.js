@@ -1,4 +1,4 @@
-﻿// Metrics Display Updater
+// Metrics Display Updater
 // Updates the metrics bar with current network statistics
 
 function updateMetricsDisplay() {
