@@ -6,6 +6,7 @@
   "description": "Local Commwise app sync workflow with Git-friendly block files.",
   "scripts": {
     "sync:pull": "node scripts/sync-pull.js",
+    "sync:pull:live": "node scripts/sync-pull-live.js",
     "sync:pack": "node scripts/sync-pack.js",
     "sync:push": "node scripts/sync-push.js",
     "preview": "node scripts/preview.js",
@@ -13,5 +14,8 @@
   },
   "devDependencies": {
     "vitest": "^2.1.8"
+  },
+  "dependencies": {
+    "iconv-lite": "^0.7.2"
   }
 }

@@ -27,6 +27,21 @@ Then edit `config/commwise.json` with your `appId`.
 - Downloaded logo: `.local/wp-content/uploads/2025/06/WiseyLogo.png`
 - Local preview uses this copy to avoid missing WordPress references.
 
+## One-Step Live Refresh
+
+```bash
+npm run sync:pull:live
+```
+
+What it does:
+- Reads `.local/exports/app-13866-full.txt`
+- Syncs blocks into `commwise/blocks`
+- Regenerates `.local/preview.html`
+
+Notes:
+- This command assumes the latest live export file already exists at `.local/exports/app-13866-full.txt`.
+- If you are using Copilot Commwise MCP, ask it to refresh the live export first, then run this command.
+
 ## Structure
 
 - `commwise/blocks/`: Git-friendly source files
@@ -56,6 +71,10 @@ Examples:
 3. Generate a preview:
    ```bash
    npm run preview
+   ```
+   Or run the one-step refresh:
+   ```bash
+   npm run sync:pull:live
    ```
 4. Pack for push:
    ```bash

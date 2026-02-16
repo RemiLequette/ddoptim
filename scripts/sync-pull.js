@@ -1,7 +1,57 @@
 import path from "node:path";
 import { readFile, readdir, unlink } from "node:fs/promises";
+import iconv from "iconv-lite";
 import { writeBlocksToDir } from "../src/commwise-blocks.js";
 import { BLOCK_DIR, CONFIG_PATH, EXPORT_DIR, readJsonFile, writeJsonFile } from "./utils.js";
+
+function countMojibakeSignals(text) {
+  if (!text) {
+    return 0;
+  }
+
+  const pattern = /[ÃÂâð]/g;
+  const matches = text.match(pattern);
+  return matches ? matches.length : 0;
+}
+
+function repairMojibake(text) {
+  if (typeof text !== "string" || text.length === 0) {
+    return text;
+  }
+
+  if (/[\uD800-\uDFFF]/.test(text)) {
+    return text;
+  }
+
+  if (/[^\u0000-\u017f]/.test(text)) {
+    return text;
+  }
+
+  const originalScore = countMojibakeSignals(text);
+  if (originalScore === 0) {
+    return text;
+  }
+
+  const candidate = iconv.decode(iconv.encode(text, "win1252"), "utf8");
+  if (candidate.includes("�")) {
+    return text;
+  }
+
+  const candidateScore = countMojibakeSignals(candidate);
+
+  if (candidateScore < originalScore) {
+    return candidate;
+  }
+
+  return text;
+}
+
+function normalizeBlockEncoding(blocks) {
+  return blocks.map((block) => ({
+    ...block,
+    content: repairMojibake(block.content ?? "")
+  }));
+}
 
 function parseFullTextExport(content) {
   const headerRegex = /^=== BLOCK:\s*(\d{7})\s*\|\s*(.*?)\s*===\s*$/gm;
@@ -107,6 +157,8 @@ async function main() {
       throw new Error("Ce snapshot ne contient pas le contenu des blocs. Utilise un export complet .txt (app-<id>-full.txt).");
     }
   }
+
+  blocks = normalizeBlockEncoding(blocks);
 
   await cleanExistingBlockFiles(BLOCK_DIR);
   await writeBlocksToDir(BLOCK_DIR, blocks);

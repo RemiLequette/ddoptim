@@ -48,7 +48,7 @@
       node.requiredLeadTime = 0;
     });
     
-    // Ensure VÃ©lo has customerTolerance = 5
+    // Ensure Vélo has customerTolerance = 5
     const velo = window.DDoptim.model.nodes.get('velo');
     velo.customerTolerance = 5;
     velo.independentADU = 40;
