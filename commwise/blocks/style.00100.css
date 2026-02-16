@@ -1,0 +1,92 @@
+﻿/* ============================
+   COMMWISE STANDARD HEADER
+   ============================ */
+
+.b2w-app-header {
+    flex-shrink: 0 !important;
+    padding: 0.75rem 1.5rem !important;
+    background: var(--b2w-white) !important;
+    border-bottom: 1px solid var(--b2w-grey-1-200) !important;
+    box-shadow: var(--b2w-shadow-md) !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+}
+
+.b2w-app-header h1 {
+    font-size: 1.75rem !important;
+    font-weight: 700 !important;
+    color: var(--b2w-grey-1-900) !important;
+    margin: 0 !important;
+}
+
+.b2w-app-header-brand {
+    color: var(--b2w-brand-1-500) !important;
+}
+
+/* Header Actions Container */
+.b2w-header-actions {
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+}
+
+/* Header Button Base Styles */
+.b2w-header-btn {
+    width: 40px !important;
+    height: 40px !important;
+    border-radius: 8px !important;
+    border: 1px solid var(--b2w-grey-1-200) !important;
+    background: var(--b2w-grey-1-50) !important;
+    color: var(--b2w-grey-1-500) !important;
+    cursor: pointer !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: all 0.2s ease !important;
+    padding: 0 !important;
+}
+
+.b2w-header-btn:hover {
+    background: var(--b2w-grey-1-100) !important;
+    border-color: var(--b2w-grey-1-300) !important;
+    color: var(--b2w-grey-1-700) !important;
+}
+
+.b2w-header-btn:focus {
+    outline: none !important;
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2) !important;
+    border-color: #2563eb !important;
+}
+
+/* Info Button Specific */
+.b2w-info-btn:hover {
+    border-color: #2563eb !important;
+    color: #2563eb !important;
+}
+
+/* Settings Button Specific */
+.b2w-settings-btn:hover {
+    border-color: var(--b2w-brand-1-500) !important;
+    color: var(--b2w-brand-1-500) !important;
+}
+
+.b2w-app-header-logo {
+    height: 40px !important;
+    width: auto !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .b2w-app-header {
+        flex-direction: column !important;
+        gap: 1rem !important;
+        text-align: center !important;
+    }
+    .b2w-app-header h1 {
+        font-size: 1.25rem !important;
+    }
+    .b2w-header-actions {
+        justify-content: center !important;
+    }
+}

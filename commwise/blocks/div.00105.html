@@ -1,0 +1,86 @@
+﻿<div id="modelSelectorBar" style="background: #f8f9fa; border-bottom: 1px solid #e0e0e0; padding: 12px 24px; display: flex; align-items: center; gap: 16px;">
+    <!-- Left Side: Model Selection -->
+    <label for="modelSelect" style="font-weight: 600; color: #2c3e50; font-size: 14px;">Network Model:</label>
+    <select id="modelSelect" style="padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px; min-width: 250px; cursor: pointer;">
+        <option value="">-- Select a model --</option>
+        <option value="simple_chain">Simple Chain (3 nodes)</option>
+        <option value="simple_assembly">Simple Assembly (V-structure)</option>
+        <option value="simple_distribution">Simple Distribution (A-structure)</option>
+        <option value="weber_pignons">Weber Pignons (27 nodes)</option>
+    </select>
+    <button id="loadModelBtn" style="padding: 8px 16px; background: #10b981; color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 14px;">Load Model</button>
+    <span id="modelStatus" style="color: #6b7280; font-size: 13px; font-style: italic;"></span>
+    
+    <!-- Spacer -->
+    <div style="flex: 1;"></div>
+    
+    <!-- Model Name Display/Edit -->
+    <div class="model-name-display" id="modelNameDisplay" style="display: flex; align-items: center; gap: 8px;">
+        <span class="model-label" style="font-weight: 600; color: #2c3e50; font-size: 14px;">Model:</span>
+        <span class="model-name-text" id="modelNameText" style="font-weight: 500; color: #374151; font-size: 14px;">Weber_Pignons</span>
+        <button class="model-edit-btn" id="editModelNameBtn" 
+                style="padding: 4px 8px; background: transparent; border: 1px solid #d1d5db; border-radius: 4px; cursor: pointer; font-size: 14px;"
+                title="Edit model name">
+            âœï¸
+        </button>
+    </div>
+    <div class="model-name-edit" id="modelNameEdit" style="display: none; align-items: center; gap: 8px;">
+        <span class="model-label" style="font-weight: 600; color: #2c3e50; font-size: 14px;">Model:</span>
+        <input 
+            type="text" 
+            id="modelNameInput" 
+            class="model-name-input" 
+            style="padding: 6px 10px; border: 1px solid #d1d5db; border-radius: 4px; font-size: 14px; min-width: 200px;"
+            placeholder="Enter model name"
+            maxlength="50"
+        />
+        <button class="model-save-btn" id="saveModelNameBtn" 
+                style="padding: 6px 12px; background: #10b981; color: white; border: none; border-radius: 4px; font-weight: 600; cursor: pointer; font-size: 14px;"
+                title="Save">
+            âœ“
+        </button>
+        <button class="model-cancel-btn" id="cancelModelNameBtn" 
+                style="padding: 6px 12px; background: #ef4444; color: white; border: none; border-radius: 4px; font-weight: 600; cursor: pointer; font-size: 14px;"
+                title="Cancel">
+            âœ•
+        </button>
+    </div>
+    
+    <!-- Center: Export/Import/Auto-Position Buttons -->
+    <button id="exportJsonBtn" 
+            style="padding: 8px 16px; background: #3b82f6; color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 6px;"
+            title="Export current configuration to JSON file">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+        </svg>
+        Export JSON
+    </button>
+    
+    <button id="importJsonBtn" 
+            style="padding: 8px 16px; background: #8b5cf6; color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 6px;"
+            title="Import configuration from JSON file">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 1 0 0 1-2-2v-4"></path>
+            <polyline points="17 8 12 3 7 8"></polyline>
+            <line x1="12" y1="3" x2="12" y2="15"></line>
+        </svg>
+        Import JSON
+    </button>
+    
+    <!-- Auto-Position Button -->
+    <button id="autoPositionBtn" class="auto-position-btn" 
+            style="padding: 8px 16px; background: #f59e0b; color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 6px;"
+            title="Run Required Lead Time Propagation algorithm">
+        âš¡ Auto-Position
+    </button>
+    
+    <!-- Right Side: Lead Time Display Selector -->
+    <label for="leadTimeDisplaySelect" style="font-weight: 600; color: #2c3e50; font-size: 14px; margin-left: 16px;">Lead Time Display:</label>
+    <select id="leadTimeDisplaySelect" style="padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px; min-width: 200px; cursor: pointer;">
+        <option value="immediate">Immediate (node only)</option>
+        <option value="cumulative">Cumulative (CLT)</option>
+        <option value="decoupled" selected>Decoupled (DLT)</option>
+    </select>
+</div>

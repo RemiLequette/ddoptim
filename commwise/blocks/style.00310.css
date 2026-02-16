@@ -1,0 +1,19 @@
+﻿/* Network Tooltip */
+.ddoptim-tooltip {
+  position: absolute;
+  pointer-events: none;
+  background: white;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  padding: 0;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  z-index: 1000;
+  max-width: 700px; /* Wide enough for two-column layout + buffer zones */
+  width: auto;
+}
+
+.ddoptim-tooltip.visible {
+  opacity: 1;
+}

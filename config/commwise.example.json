@@ -1,0 +1,5 @@
+{
+  "appId": 12345,
+  "workspaceName": "my-commwise-app",
+  "notes": "Copie ce fichier vers config/commwise.json et adapte appId."
+}

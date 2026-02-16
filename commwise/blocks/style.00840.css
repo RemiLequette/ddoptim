@@ -1,0 +1,41 @@
+﻿/* T840: WORDPRESS OVERRIDES */
+/* CRITICAL: Include this in every CommWise app to prevent theme interference */
+
+/* === HIDE WORDPRESS ELEMENTS === */
+#wpadminbar,
+.grecaptcha-badge,
+.g-recaptcha {
+    display: none !important;
+}
+
+/* === RESET WORDPRESS CONTAINERS === */
+.site,
+.site-content,
+.content-area,
+.entry-content,
+.post,
+.page,
+.container,
+.main-content,
+.primary,
+.wp-site-blocks,
+.wp-block-group {
+    max-width: none !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* === RESET HTML & BODY === */
+html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    overflow-x: hidden !important;
+}
+
+/* === UNIVERSAL BOX SIZING === */
+*, *::before, *::after {
+    box-sizing: border-box !important;
+}

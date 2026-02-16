@@ -1,0 +1,6 @@
+﻿/* ============================
+   CSS IMPORTS - MUST BE FIRST
+   ============================ */
+/* Per CSS specification, @import rules MUST appear before any other CSS rules */
+
+@import url('https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap');

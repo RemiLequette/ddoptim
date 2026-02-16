@@ -1,0 +1,46 @@
+﻿<div class="network-container">
+  <!-- Loading State -->
+  <div class="network-loading" id="network-loading">
+    <div class="spinner"></div>
+    <div>Loading network...</div>
+  </div>
+  
+  <!-- SVG Canvas for D3.js -->
+  <svg id="network-svg"></svg>
+  
+  <!-- Zoom Controls -->
+  <div class="zoom-controls">
+    <button class="zoom-btn" id="zoom-in" title="Zoom In">+</button>
+    <button class="zoom-btn" id="zoom-reset" title="Reset View">âŸ²</button>
+    <button class="zoom-btn" id="zoom-out" title="Zoom Out">âˆ’</button>
+  </div>
+  
+  <!-- Legend -->
+  <div class="network-legend">
+    <div class="legend-title">Node Types</div>
+    <div class="legend-item">
+      <div class="legend-color" style="background: #3b82f6;"></div>
+      <span>Finished Product</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-color" style="background: #10b981;"></div>
+      <span>Intermediate</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-color" style="background: #6b7280;"></div>
+      <span>Machined</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-color" style="background: #f59e0b;"></div>
+      <span>Purchased Local</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-color" style="background: #ef4444;"></div>
+      <span>Purchased International</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-color buffered"></div>
+      <span>Buffered (thick border)</span>
+    </div>
+  </div>
+</div>

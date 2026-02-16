@@ -1,0 +1,214 @@
+﻿<!--
+# DDoptim - DDMRP Buffer Positioning Optimizer
+
+## Project Overview
+
+**Purpose:** Interactive web application for strategic DDMRP buffer positioning in supply chain networks.
+
+**Key Features:**
+- Visualize supply chain BOM structure with interactive network graph
+- Manual buffer positioning (toggle buffers on/off per node)
+- Real-time DDMRP buffer sizing calculations (Yellow/Green/Red zones)
+- Scenario management (create, save, compare multiple strategies)
+- Performance metrics dashboard (inventory value, DLT, coverage, buffer impact)
+
+**Reference Case Study:** Weber Pignons bicycle assembly (~1000 bikes/month, multi-level BOM)
+
+## Technical Approach
+
+**Fully Autonomous:** No backend dependencies, all calculations client-side JavaScript
+
+**Core Algorithms:**
+1. ADU Propagation (independent + dependent demand, top-down through BOM) [DONE]
+2. CLT Calculation (Cumulative Lead Time - longest path from raw materials, bottom-up) [DONE]
+3. DLT Calculation (Decoupled Lead Time - from buffers, resets at buffer positions, bottom-up) [DONE]
+4. DDMRP Buffer Sizing (Yellow = ADU x DLT, Green = max of delay/MOQ/cycle, Red = base + security) [TODO]
+
+**Data Model:**
+- Network: Directed graph with nodes (items/operations) and edges (BOM relationships)
+- Node attributes: independentADU (editable), calculatedADU (computed), clt, dlt, leadTime, bufferProfile, hasBuffer, moq, orderCycle, unitCost
+- Both parents AND children arrays required for BOM navigation
+- Buffer profiles: F, I, U, AL, AI (DLT thresholds, lead time factors, variability factors)
+
+**Visualization:** D3.js hierarchical tree layout (finished goods at top, components below) [DONE]
+
+**Storage:** Browser localStorage for scenarios (~5MB capacity) [TODO]
+
+## JSON Format Specification
+
+âš ï¸ **CRITICAL: Export and Import MUST use identical field names**
+
+**Standard Format (used by MODEL_LIBRARY, Export, and Import):**
+```json
+{
+  "metadata": {
+    "name": "Model Name Here",        // âœ… Use 'name' (NOT 'modelName')
+    "description": "Model description",
+    "version": "1.0",
+    "exportedAt": "2025-02-09T...",
+    "exportedBy": "DDoptim v1.0"
+  },
+  "nodes": [
+    {
+      "id": "node_id",
+      "name": "Node Display Name",
+      "type": "finished_good|intermediate|raw_material",
+      "independentADU": 0,
+      "leadTime": 0,
+      "bufferProfile": "F|I|U|AL|AI",
+      "hasBuffer": false,
+      "bufferDecisionMode": "open|force|forbid",
+      "bufferRationale": "",
+      "moq": 0,
+      "orderCycle": 0,
+      "unitCost": 0,
+      "children": [
+        {"id": "child_id", "quantity": 1}  // âœ… Use 'id' (NOT 'nodeId')
+      ]
+    }
+  ],
+  "bufferProfiles": {
+    "F": {...}, "I": {...}, "U": {...}, "AL": {...}, "AI": {...}
+  }
+}
+```
+
+**Field Name Standards:**
+- âœ… `metadata.name` (model name) - NOT `metadata.modelName`
+- âœ… `children[].id` (child node reference) - NOT `children[].nodeId`
+- âœ… `parents[].id` (parent node reference) - NOT `parents[].nodeId`
+
+**Export Behavior (SCRIPT 1150):**
+- Reads model name from UI display element `#modelNameDisplay`
+- Saves as `metadata.name` to match MODEL_LIBRARY format
+- Includes all user-modified parameters (ADU, lead times, buffer decisions, costs)
+- Excludes calculated values (calculatedADU, clt, dlt, bufferSizing) - recomputed on import
+
+**Import Behavior (SCRIPT 1090 ModelLoader):**
+- Reads model name from `metadata.name`
+- Updates UI display via `updateModelNameDisplay()`
+- Recalculates all derived values (ADU propagation, CLT, DLT, buffer sizing)
+- Normalizes both old format (`nodeId`) and new format (`id`) for backward compatibility
+
+**Validation:**
+1. Export a model â†’ inspect JSON file â†’ verify `metadata.name` is populated
+2. Import that JSON â†’ verify model name displays correctly in UI
+3. Check console for "ðŸ“ Model name updated to: [name]" message
+
+## Current Status (2025-02-04)
+
+**COMPLETED:**
+- App structure with proper block organization (META, STYLE, DIV, SCRIPT sections)
+- Buffer profile system with Weber Pignons defaults (F, I, U, AL, AI)
+- Network data: SIMPLE_TEST_NETWORK (3 nodes) and WEBER_PIGNONS_NETWORK (27 nodes)
+- Core algorithms implemented and tested:
+  * ADU Propagation engine (SCRIPT 500) - top-down through BOM
+  * CLT Calculator (SCRIPT 600) - bottom-up, children before parents
+  * DLT Calculator (SCRIPT 700) - bottom-up, ignores buffered children
+- Network visualization with D3.js (SCRIPT 800, DIV 200)
+- Lead time display mode selector (Immediate/Cumulative/Decoupled)
+- Node detail panel with editable scenario parameters (DIV 300, SCRIPT 900)
+- Buffer toggle triggers DLT recalculation and network refresh
+- Model selector to switch between test and full networks
+- JSON Export/Import with standardized metadata.name field
+
+**IN PROGRESS:**
+- Buffer sizing calculations (SCRIPT 400) - formula defined, integration pending
+- Metrics engine (SCRIPT 700) - structure defined, calculations pending
+
+**RECENTLY FIXED:**
+- SIMPLE_TEST_NETWORK missing children arrays (only had parents) - Added children to all nodes
+- DLT now correctly calculates bottom-up: Velo 5 days (both buffered), 9 days (Roue unbuffered + Rayon buffered), 24 days (no buffers)
+- JSON format standardized: Export uses metadata.name (not metadata.modelName) to match import expectations
+
+**NEXT PRIORITIES:**
+1. Implement DDMRP buffer sizing calculator integration (connect SCRIPT 400 to UI)
+2. Add buffer sizing visualization (Red/Yellow/Green zone bars) to detail panel
+3. Complete metrics engine and dashboard (total inventory, coverage, DLT stats)
+4. Scenario save/load with localStorage persistence
+
+## Development Phases
+
+**Phase 1: Foundation [COMPLETE]**
+- [x] App structure and boundary blocks
+- [x] Buffer profile definitions (SCRIPT 300)
+- [x] Weber Pignons network data (SCRIPT 200)
+- [x] Simple test network (SCRIPT 150)
+- [x] Core algorithms: ADU, CLT, DLT (SCRIPT 500-700)
+- [x] Diagnostic validation tests (DIAGNOSTICS 100-200)
+
+**Phase 2: Visualization [COMPLETE]**
+- [x] D3.js network graph rendering (SCRIPT 800)
+- [x] Node coloring by type
+- [x] Lead time badges (CLT/DLT display)
+- [x] Model selector dropdown
+- [x] Node selection and highlighting
+
+**Phase 3: Interactive Controls [MOSTLY COMPLETE]**
+- [x] Control panel sidebar (DIV 300)
+- [x] Node details display (CLT, DLT, independent/calculated ADU)
+- [x] Buffer toggle with DLT recalculation
+- [x] Buffer decision modes (open/force/forbid)
+- [x] Editable scenario parameters (ADU, lead time, profile, MOQ, cycle, cost)
+- [ ] Buffer sizing visualization (Red/Yellow/Green zones) - NEXT
+- [ ] Buffer sizing calculation trigger - NEXT
+
+**Phase 4: Metrics & Scenarios [IN PROGRESS]**
+- [ ] Metrics calculator (total inventory, coverage, buffer count)
+- [ ] Metrics dashboard panel
+- [ ] Scenario save/load (localStorage)
+- [ ] Scenario comparison table
+- [x] Export/Import JSON with standardized format
+
+## Technical Notes
+
+**BOM Data Structure:**
+- Each node MUST have both `parents` and `children` arrays
+- `children`: Components this item uses (for CLT/DLT bottom-up calculation)
+- `parents`: Products that use this component (for ADU top-down propagation)
+- Example: Wheel has children=[spoke], parents=[bike]
+
+**Lead Time Calculation:**
+- **CLT (Cumulative):** leadTime + MAX(all child CLT) - independent of buffers
+- **DLT (Decoupled):** leadTime + MAX(unbuffered child DLT only) - buffered children ignored
+- Both calculated bottom-up (children first, then parents)
+
+**Buffer Toggle Behavior:**
+- User toggles buffer -> Update node.hasBuffer
+- Trigger: DLTCalculator.calculateDLT(network.nodes)
+- Trigger: NetworkRenderer.render(network) to update visualization
+- Result: DLT badges and detail panel update immediately
+
+**Browser Cache:**
+- Hard refresh required after code changes: Ctrl+Shift+R (Windows) or Cmd+Shift+R (Mac)
+- Alternative: F12 -> Network tab -> "Disable cache" checkbox (keep DevTools open)
+
+## Validation Examples
+
+**Simple Test Network (3 nodes):**
+- No buffers: Spoke CLT=15, Wheel CLT=19, Velo CLT=24 | DLT same as CLT
+- Rayon + Roue buffered: Velo DLT = 5 days (both children buffered)
+- Only Rayon buffered: Velo DLT = 9 days (Roue unbuffered contributes 4 days)
+
+**Weber Pignons (27 nodes):**
+- Baseline ADU: 40 bikes/day (winter 34, summer 52)
+- Spare parts: Plateau/Pignon/Chaine have independentADU ~ 2/day (~5% of bike usage)
+- Expected propagation: Velo 52 -> Wheel 104 -> Spoke 7,488 (summer)
+
+## Success Criteria
+
+- Buffer sizing calculations match Excel reference (+/-1 unit)
+- ADU propagation validates: Velo 52 -> Wheel 104 -> Spoke 7,488
+- CLT calculation validates: Velo = 39 days (unbuffered, longest path from raw materials)
+- DLT calculation validates: With wheel buffer -> Velo DLT = 9 days
+- UI responsive, calculations <100ms
+- No console errors, proper logging on all operations
+- JSON Export/Import round-trip preserves all user modifications
+
+## References
+
+- Design Document: /mnt/project/DDoptim_CommWise_Design.md
+- Requirements: /mnt/project/DDoptim_requirements.md
+- Excel Calculations: /mnt/project/Soutenance_DDP_Remi_LEQUETTE__20250205__Calculs.xlsx
+- Case Study PDF: /mnt/project/Soutenance_CPF_DDP_Remi_LEQUETTE__20250205.pdf
+-->

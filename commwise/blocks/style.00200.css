@@ -1,0 +1,17 @@
+﻿/* Layout - Full height network visualization */
+.b2w-app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.b2w-app-header {
+  flex-shrink: 0;
+}
+
+.network-container {
+  flex: 1;
+  min-height: 0; /* Important for flex child scrolling */
+  height: calc(100vh - 80px); /* Full viewport minus header */
+}

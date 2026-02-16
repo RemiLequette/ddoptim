@@ -1,0 +1,42 @@
+﻿<!-- Settings Modal -->
+<div id="b2w-settings-modal-backdrop" class="b2w-settings-modal-backdrop">
+    <div class="b2w-settings-modal" role="dialog" aria-modal="true" aria-labelledby="settings-modal-title">
+        <div class="b2w-settings-modal-header">
+            <h2 id="settings-modal-title" class="b2w-settings-modal-title">
+                <span>âš™ï¸</span> Settings
+            </h2>
+            <button class="b2w-settings-modal-close" aria-label="Close settings" onclick="SETTINGS.close()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+        <div class="b2w-settings-modal-content">
+            <div class="b2w-settings-placeholder">
+                <div class="b2w-settings-placeholder-icon">âš™ï¸</div>
+                <h3 class="b2w-settings-placeholder-title">App Settings</h3>
+                <p class="b2w-settings-placeholder-text">
+                    This app doesn't have any configurable settings yet.
+                    Settings can be added to customize how this app behaves.
+                </p>
+                <div class="b2w-settings-instruction">
+                    <p class="b2w-settings-instruction-label">To add settings, ask your LLM:</p>
+                    <p class="b2w-settings-instruction-text">
+                        "Please add a parameter management system to this app.
+                        I need to configure [describe your parameters] so users can customize the app behavior."
+                    </p>
+                </div>
+                <div class="b2w-settings-instruction" style="margin-top: 12px !important;">
+                    <p class="b2w-settings-instruction-label">To hide the settings button:</p>
+                    <p class="b2w-settings-instruction-text">
+                        "Please hide the settings button in the header - this app doesn't need user-configurable settings."
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="b2w-settings-modal-footer">
+            <button class="b2w-settings-btn-close" onclick="SETTINGS.close()">Close</button>
+        </div>
+    </div>
+</div>

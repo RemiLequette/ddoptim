@@ -1,0 +1,150 @@
+﻿/* T810: IMMUTABLE COLOR TOKENS */
+/* These colors are reserved for DDMRP visualizations and must not change on rebrand */
+
+:root {
+    /* === GREY RAMP (UI Surfaces) === */
+    --b2w-grey-1-000: #eff0f2;
+    --b2w-grey-1-100: #dfe2e6;
+    --b2w-grey-1-200: #d0d3d9;
+    --b2w-grey-1-300: #c0c5cd;
+    --b2w-grey-1-400: #b1b7c1;
+    --b2w-grey-1-500: #a2a9b5;
+    --b2w-grey-1-600: #939ba9;
+    --b2w-grey-1-700: #747a85;
+    --b2w-grey-1-800: #565a62;
+    --b2w-grey-1-900: #3a3d41;
+    --b2w-white: #ffffff;
+    --b2w-black: #000000;
+
+    /* === DDMRP YELLOW (Warning/Caution) === */
+    --b2w-yellow-1-000: #fff0cd;
+    --b2w-yellow-1-100: #ffe9b5;
+    --b2w-yellow-1-200: #ffe19c;
+    --b2w-yellow-1-300: #ffda83;
+    --b2w-yellow-1-400: #ffd369;
+    --b2w-yellow-1-500: #ffcb4c;
+    --b2w-yellow-1-600: #c79f3f;
+    --b2w-yellow-1-700: #917532;
+    --b2w-yellow-1-800: #5f4d24;
+    --b2w-yellow-1-900: #312916;
+
+    /* === DDMRP GREEN (Safe/OK) === */
+    --b2w-green-1-000: #caefd9;
+    --b2w-green-1-100: #aee6c6;
+    --b2w-green-1-200: #91deb4;
+    --b2w-green-1-300: #72d5a2;
+    --b2w-green-1-400: #4dcb90;
+    --b2w-green-1-500: #00c27e;
+    --b2w-green-1-600: #189864;
+    --b2w-green-1-700: #1c704b;
+    --b2w-green-1-800: #1a4a33;
+    --b2w-green-1-900: #13281d;
+
+    /* === CYAN 1 (Teal) === */
+    --b2w-cyan-1-000: #cbeee7;
+    --b2w-cyan-1-100: #b0e6dc;
+    --b2w-cyan-1-200: #93ddd0;
+    --b2w-cyan-1-300: #74d4c4;
+    --b2w-cyan-1-400: #4fcbb9;
+    --b2w-cyan-1-500: #00c2ae;
+    --b2w-cyan-1-600: #189888;
+    --b2w-cyan-1-700: #1d7065;
+    --b2w-cyan-1-800: #1b4a43;
+    --b2w-cyan-1-900: #142724;
+
+    /* === CYAN 2 (Sky) === */
+    --b2w-cyan-2-000: #c9e5ed;
+    --b2w-cyan-2-100: #add8e5;
+    --b2w-cyan-2-200: #90cbdc;
+    --b2w-cyan-2-300: #71bfd3;
+    --b2w-cyan-2-400: #4cb2cb;
+    --b2w-cyan-2-500: #00a5c2;
+    --b2w-cyan-2-600: #178298;
+    --b2w-cyan-2-700: #1c6070;
+    --b2w-cyan-2-800: #1a404a;
+    --b2w-cyan-2-900: #132327;
+
+    /* === BLUE 1 (Primary Blue) === */
+    --b2w-blue-1-000: #d6dbff;
+    --b2w-blue-1-100: #c0c9ff;
+    --b2w-blue-1-200: #aab8ff;
+    --b2w-blue-1-300: #92a7ff;
+    --b2w-blue-1-400: #7796ff;
+    --b2w-blue-1-500: #5786ff;
+    --b2w-blue-1-600: #486ac6;
+    --b2w-blue-1-700: #394f91;
+    --b2w-blue-1-800: #2a355f;
+    --b2w-blue-1-900: #1a1e31;
+
+    /* === PURPLE 1 (Deep) === */
+    --b2w-purple-1-000: #d2b9f0;
+    --b2w-purple-1-100: #ba98e7;
+    --b2w-purple-1-200: #a276df;
+    --b2w-purple-1-300: #8755d5;
+    --b2w-purple-1-400: #6a33cc;
+    --b2w-purple-1-500: #4700c2;
+    --b2w-purple-1-600: #3c0a98;
+    --b2w-purple-1-700: #310f70;
+    --b2w-purple-1-800: #250f4a;
+    --b2w-purple-1-900: #190b28;
+
+    /* === PURPLE 2 (Magenta) === */
+    --b2w-purple-2-000: #e7c1ef;
+    --b2w-purple-2-100: #daa2e6;
+    --b2w-purple-2-200: #cc83de;
+    --b2w-purple-2-300: #bc63d5;
+    --b2w-purple-2-400: #ac3fcb;
+    --b2w-purple-2-500: #9b00c2;
+    --b2w-purple-2-600: #7b1198;
+    --b2w-purple-2-700: #5c1570;
+    --b2w-purple-2-800: #3e144a;
+    --b2w-purple-2-900: #231028;
+
+    /* === PINK 1 === */
+    --b2w-pink-1-000: #f3c4e1;
+    --b2w-pink-1-100: #eba6d2;
+    --b2w-pink-1-200: #e288c4;
+    --b2w-pink-1-300: #d968b5;
+    --b2w-pink-1-400: #ce44a6;
+    --b2w-pink-1-500: #c20098;
+    --b2w-pink-1-600: #981378;
+    --b2w-pink-1-700: #711859;
+    --b2w-pink-1-800: #4b163c;
+    --b2w-pink-1-900: #291121;
+
+    /* === PINK 2 (Rose) === */
+    --b2w-pink-2-000: #f6c3c5;
+    --b2w-pink-2-100: #efa4a9;
+    --b2w-pink-2-200: #e6868e;
+    --b2w-pink-2-300: #db6674;
+    --b2w-pink-2-400: #cf425b;
+    --b2w-pink-2-500: #c20044;
+    --b2w-pink-2-600: #991237;
+    --b2w-pink-2-700: #71162a;
+    --b2w-pink-2-800: #4c151e;
+    --b2w-pink-2-900: #291121;
+
+    /* === RED 1 (Soft Red) === */
+    --b2w-red-1-000: #ffd3d2;
+    --b2w-red-1-100: #ffbcbc;
+    --b2w-red-1-200: #ffa5a7;
+    --b2w-red-1-300: #ff8d92;
+    --b2w-red-1-400: #ff747e;
+    --b2w-red-1-500: #ff576b;
+    --b2w-red-1-600: #c74754;
+    --b2w-red-1-700: #92383f;
+    --b2w-red-1-800: #60282c;
+    --b2w-red-1-900: #321919;
+
+    /* === RED 2 (Deep Red) === */
+    --b2w-red-2-000: #e9bdb2;
+    --b2w-red-2-100: #db9d8e;
+    --b2w-red-2-200: #cb7d6b;
+    --b2w-red-2-300: #ba5d49;
+    --b2w-red-2-400: #a73b2a;
+    --b2w-red-2-500: #930b0b;
+    --b2w-red-2-600: #75120b;
+    --b2w-red-2-700: #581409;
+    --b2w-red-2-800: #3d1207;
+    --b2w-red-2-900: #230e03;
+}

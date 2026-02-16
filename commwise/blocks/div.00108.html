@@ -1,0 +1,53 @@
+﻿<div id="auto-position-modal" class="modal" style="display: none;">
+  <div class="modal-overlay"></div>
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>âš¡ Auto-Position Buffers - Preview</h2>
+      <button class="modal-close-btn" onclick="window.AutoPositionUI.closeModal()">Ã—</button>
+    </div>
+    
+    <div class="modal-body">
+      <!-- Summary Section -->
+      <div class="summary" style="background: var(--b2w-surface); padding: 16px; border-radius: 8px; margin-bottom: 16px;">
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;">
+          <div>
+            <strong style="color: var(--b2w-success);">âž• Buffers to Add</strong>
+            <div style="font-size: 24px; font-weight: 700;" id="buffers-add-count">0</div>
+          </div>
+          <div>
+            <strong style="color: var(--b2w-error);">âž– Buffers to Remove</strong>
+            <div style="font-size: 24px; font-weight: 700;" id="buffers-remove-count">0</div>
+          </div>
+          <div>
+            <strong style="color: var(--b2w-warning);">ðŸ”’ Locked Buffers</strong>
+            <div style="font-size: 24px; font-weight: 700;" id="buffers-locked-count">0</div>
+            <small style="color: var(--b2w-text-muted);">preserved</small>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Changes List -->
+      <div class="changes-section" style="margin-bottom: 16px;">
+        <h3 style="margin-bottom: 12px;">ðŸ“ Proposed Changes</h3>
+        <div id="buffer-changes-list" style="max-height: 200px; overflow-y: auto; border: 1px solid var(--b2w-border); border-radius: 4px; padding: 12px; background: var(--b2w-background);">
+          <!-- Generated dynamically -->
+        </div>
+      </div>
+      
+      <!-- Algorithm Log -->
+      <details>
+        <summary style="cursor: pointer; font-weight: 600; margin-bottom: 8px;">ðŸ“Š Algorithm Execution Log</summary>
+        <pre id="algorithm-log-text" style="background: var(--b2w-surface); padding: 12px; border-radius: 4px; font-size: 12px; max-height: 200px; overflow-y: auto; border: 1px solid var(--b2w-border);"></pre>
+      </details>
+    </div>
+    
+    <div class="modal-footer">
+      <button id="btn-cancel-auto-position" class="btn btn-secondary" onclick="window.AutoPositionUI.closeModal()">
+        âœ• Cancel
+      </button>
+      <button id="btn-apply-auto-position" class="btn btn-primary" onclick="window.AutoPositionUI.applyChanges()">
+        âœ“ Apply Changes
+      </button>
+    </div>
+  </div>
+</div>

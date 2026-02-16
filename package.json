@@ -1,0 +1,17 @@
+{
+  "name": "ddoptim-commwise-sync",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Local Commwise app sync workflow with Git-friendly block files.",
+  "scripts": {
+    "sync:pull": "node scripts/sync-pull.js",
+    "sync:pack": "node scripts/sync-pack.js",
+    "sync:push": "node scripts/sync-push.js",
+    "preview": "node scripts/preview.js",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "vitest": "^2.1.8"
+  }
+}

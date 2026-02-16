@@ -1,0 +1,76 @@
+﻿/* T820: MUTABLE COLOR TOKENS */
+/* These colors can be changed for rebranding without affecting DDMRP visualizations */
+
+:root {
+    /* === BRAND GREEN (Primary Brand) === */
+    --b2w-brand-1-000: #cef7ce;
+    --b2w-brand-1-100: #b4f2b5;
+    --b2w-brand-1-200: #98ed9d;
+    --b2w-brand-1-300: #79e784;
+    --b2w-brand-1-400: #54e16b;
+    --b2w-brand-1-500: #00dd51;
+    --b2w-brand-1-600: #1bab41;
+    --b2w-brand-1-700: #1f7e33;
+    --b2w-brand-1-800: #1d5325;
+    --b2w-brand-1-900: #152b17;
+
+    /* === ORANGE (Mutable Warning) === */
+    --b2w-orange-1-000: #fcdcbc;
+    --b2w-orange-1-100: #f8cb9b;
+    --b2w-orange-1-200: #f2b97b;
+    --b2w-orange-1-300: #eba85a;
+    --b2w-orange-1-400: #e49838;
+    --b2w-orange-1-500: #db8700;
+    --b2w-orange-1-600: #ac6b0d;
+    --b2w-orange-1-700: #7e5011;
+    --b2w-orange-1-800: #543611;
+    --b2w-orange-1-900: #2d1e0c;
+
+    /* === GREEN 2 (Status Positive) === */
+    --b2w-green-2-000: #d6f6c3;
+    --b2w-green-2-100: #c1f1a5;
+    --b2w-green-2-200: #aaec87;
+    --b2w-green-2-300: #91e767;
+    --b2w-green-2-400: #76e143;
+    --b2w-green-2-500: #54db00;
+    --b2w-green-2-600: #1fab13;
+    --b2w-green-2-700: #227e17;
+    --b2w-green-2-800: #1e5316;
+    --b2w-green-2-900: #162b10;
+
+    /* === BLUE 2 (Information) === */
+    --b2w-blue-2-000: #cacaf6;
+    --b2w-blue-2-100: #afb1f2;
+    --b2w-blue-2-200: #9299ec;
+    --b2w-blue-2-300: #7381e7;
+    --b2w-blue-2-400: #4e6ae1;
+    --b2w-blue-2-500: #0054db;
+    --b2w-blue-2-600: #1843ab;
+    --b2w-blue-2-700: #1d337d;
+    --b2w-blue-2-800: #1a2453;
+    --b2w-blue-2-900: #14162b;
+
+    /* === RED 3 (Danger/Problem) === */
+    --b2w-red-3-000: #ffc5b9;
+    --b2w-red-3-100: #fda897;
+    --b2w-red-3-200: #f88a77;
+    --b2w-red-3-300: #f06a58;
+    --b2w-red-3-400: #e6463a;
+    --b2w-red-3-500: #db001d;
+    --b2w-red-3-600: #ac1419;
+    --b2w-red-3-700: #7f1915;
+    --b2w-red-3-800: #551711;
+    --b2w-red-3-900: #2e110a;
+
+    /* === GREY 2 (Neutral Status) === */
+    --b2w-grey-2-000: #eeeeee;
+    --b2w-grey-2-100: #dddddd;
+    --b2w-grey-2-200: #cccccc;
+    --b2w-grey-2-300: #bcbcbc;
+    --b2w-grey-2-400: #acacac;
+    --b2w-grey-2-500: #9c9c9c;
+    --b2w-grey-2-600: #8c8c8c;
+    --b2w-grey-2-700: #6e6e6e;
+    --b2w-grey-2-800: #525252;
+    --b2w-grey-2-900: #383838;
+}

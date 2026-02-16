@@ -1,0 +1,164 @@
+﻿<!--
+# DDoptim TODO List
+
+## ðŸŽ¯ CURRENT FOCUS (2025-02-06)
+
+### Buffer Sizing & Inventory Cost Implementation [IN PROGRESS]
+**Objective:** Integrate buffer sizing calculations with UI and display inventory costs
+
+**Next Steps:**
+1. Connect SCRIPT 400 (Buffer Sizing Calculator) to UI event handlers
+2. Trigger buffer sizing when:
+   - User toggles buffer ON
+   - User changes: profile, MOQ, orderCycle, leadTime, ADU
+   - DLT recalculation completes
+3. Ensure node.bufferSizing object is populated correctly
+4. Verify detail panel displays calculated values (already implemented)
+5. Add network-wide metrics (total inventory value, buffer count)
+
+**Testing:**
+- Validate against Excel examples:
+  * Roue (summer, Profile I): Yellow=416, Green=208, Red=260, Avg=780
+  * Velo (new brands, Profile F): Yellow=3024, Green=756, Red=945, Avg=4347
+  * Plateau (summer, Profile U): Yellow=819, Green=410, Red=615
+
+## IMMEDIATE PRIORITIES
+
+### 1. Buffer Sizing Integration [HIGH PRIORITY] - IN PROGRESS
+- [ ] Connect SCRIPT 400 (Buffer Sizing Calculator) to UI event handlers
+- [ ] Trigger buffer sizing when:
+  * User toggles buffer ON
+  * User changes: profile, MOQ, orderCycle, leadTime, ADU
+  * DLT recalculation completes
+- [ ] Store calculated zones in node.bufferSizing object
+- [ ] Verify detail panel displays calculated values (visualization already exists)
+
+### 2. Network-Wide Inventory Metrics [HIGH PRIORITY]
+- [ ] Implement total inventory calculation (sum of all buffer inventory values)
+- [ ] Display total inventory value in UI
+- [ ] Calculate buffer count and distribution by level
+- [ ] Show metrics summary panel
+
+### 3. Testing & Validation [HIGH PRIORITY]
+- [ ] Validate buffer sizing against Excel examples (Roue, Velo, Plateau)
+- [ ] Test with Weber Pignons full network (27 nodes)
+- [ ] Verify spare parts ADU propagation (Plateau: 2.6 independent + 52 dependent = 54.6)
+- [ ] Test JSON export/import preserves buffer sizing correctly
+
+### 4. Metrics Dashboard [MEDIUM PRIORITY]
+- [ ] Calculate customer tolerance coverage (% products where DLT <= tolerance)
+- [ ] Calculate DLT statistics (avg, max, buffer impact)
+- [ ] Add metrics dashboard panel (DIV 400) with KPI cards
+
+## PHASE 4: SCENARIOS & PERSISTENCE
+
+### Scenario Management
+- [ ] Design scenario data structure (JSON) - PARTIAL: JSON structure defined in export
+- [ ] Implement save scenario to localStorage (DEFERRED - file-based only for now)
+- [ ] Implement load scenario from localStorage (DEFERRED - file-based only for now)
+- [ ] Add scenario list UI (DIV 500) - for localStorage version
+- [ ] Scenario comparison table (side-by-side metrics)
+- [x] Export scenario as JSON file - COMPLETED (SCRIPT 1150)
+- [x] Import scenario from JSON file - COMPLETED (SCRIPT 1160)
+
+### Scenario Features
+- [ ] Scenario metadata: name, description, created date
+- [ ] Capture: buffer decisions, ADU overrides, seasonal adjustment
+- [ ] Clone scenario (duplicate with new name)
+- [ ] Delete scenario
+- [ ] Set active scenario
+
+## FUTURE ENHANCEMENTS
+
+### Visualization Improvements
+- [ ] Multiple layout algorithms (force-directed, radial)
+- [ ] Minimap for large networks
+- [ ] Search/filter nodes
+- [ ] Highlight upstream/downstream paths from selected node
+- [ ] Buffer impact visualization (show DLT reduction)
+
+### Advanced Features
+- [ ] ADU propagation with seasonal adjustments per product
+- [ ] Variability propagation (separate supply/demand components)
+- [ ] Buffer execution alerts (Red/Yellow/Green status indicators)
+- [ ] Optimization algorithm integration (Phase 2 - automated positioning)
+- [ ] Export to Excel with formatted tables
+- [ ] SFTP data blocks for team collaboration
+
+### User Experience
+- [ ] Onboarding tutorial/walkthrough
+- [ ] Help system (tooltips, documentation panel)
+- [ ] Keyboard shortcuts
+- [ ] Undo/redo buffer changes
+- [ ] Bulk operations (select multiple nodes)
+- [ ] Copy/paste buffer settings between nodes
+
+## KNOWN ISSUES
+
+### Critical
+- None currently
+
+### Minor
+- DIV 200 has unclosed div tag (pre-existing, doesn't affect functionality)
+
+### Browser Compatibility
+- Requires hard refresh (Ctrl+Shift+R) after code updates
+
+## COMPLETED
+
+### 2025-02-06 - Session: 2b915233-aec7-467d-804b-06e20430b323
+- [x] JSON Export functionality (SCRIPT 1150) - saves only user input
+- [x] JSON Import functionality (SCRIPT 1160) - rebuilds parents, recalculates all derived values
+- [x] Export/Import UI buttons (DIV 105, SCRIPT 1165)
+- [x] Complete network state persistence (nodes, BOM, user modifications)
+- [x] Automatic recalculation on import (ADU, CLT, DLT, buffer sizing)
+- [x] Fixed module method names (propagateADU, calculateCLT, calculateDLT)
+- [x] Network visualization updates after import
+- [x] Detail panel auto-closes on import for fresh data display
+
+### 2025-02-04/05 - Session: de308864-3336-4969-9846-ff3e6925b782
+- [x] BOM data structure with parents AND children arrays
+- [x] ADU propagation engine (top-down through BOM)
+- [x] CLT calculator (bottom-up, longest path from raw materials)
+- [x] DLT calculator (bottom-up, ignores buffered children)
+- [x] Network visualization with D3.js hierarchical layout
+- [x] Lead time display mode selector (Immediate/Cumulative/Decoupled)
+- [x] Node detail panel with editable parameters
+- [x] Buffer toggle with automatic DLT recalculation
+- [x] Buffer decision modes (open/force/forbid)
+- [x] Model selector (Simple Test vs Weber Pignons)
+- [x] Fixed SIMPLE_TEST_NETWORK children arrays
+- [x] Verified DLT calculation correctness
+- [x] BOM quantity labels on network links
+- [x] Buffer zone visualization in detail panel (Red/Yellow/Green zones)
+
+## NOTES
+
+**Current Session:**
+- Session ID: 2b915233-aec7-467d-804b-06e20430b323
+- Objective: Add file-based JSON export/import functionality
+- Status: COMPLETED âœ…
+- Next focus: Buffer sizing & inventory cost integration
+
+**Development Workflow:**
+1. Make code changes
+2. Create revision with descriptive release notes
+3. Hard refresh browser (Ctrl+Shift+R)
+4. Test in console and UI
+5. Update documentation
+
+**Testing Pattern:**
+- Simple 3-node chain for quick validation
+- Weber Pignons full network for comprehensive testing
+- Excel reference values for buffer sizing validation
+- Console logging for algorithm verification
+
+**JSON Export/Import Notes:**
+- File-based only (no localStorage persistence)
+- Exports only user input data (no calculated values)
+- Imports rebuild parents from children array
+- Import recalculates all derived values using existing algorithms
+- Auto-generates timestamped filenames
+- Compatible with version control and team sharing
+- Cleaner JSON (~50% smaller than original implementation)
+-->

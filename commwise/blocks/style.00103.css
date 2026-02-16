@@ -1,0 +1,116 @@
+﻿/* ============================
+   MODEL NAME BAR
+   ============================ */
+
+.model-name-bar {
+    background: var(--b2w-grey-1-50) !important;
+    border-bottom: 1px solid var(--b2w-grey-1-200) !important;
+    padding: 10px 24px !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+}
+
+.model-name-display {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    padding: 6px 12px !important;
+    background: var(--b2w-white) !important;
+    border: 1px solid var(--b2w-grey-1-200) !important;
+    border-radius: 6px !important;
+}
+
+/* Hide when edit mode is active */
+.model-name-display.hidden {
+    display: none !important;
+}
+
+.model-label {
+    font-size: 0.875rem !important;
+    font-weight: 500 !important;
+    color: var(--b2w-grey-1-600) !important;
+}
+
+.model-name-text {
+    font-size: 0.875rem !important;
+    font-weight: 600 !important;
+    color: var(--b2w-grey-1-900) !important;
+}
+
+.model-edit-btn {
+    background: transparent !important;
+    border: none !important;
+    cursor: pointer !important;
+    padding: 4px !important;
+    font-size: 0.875rem !important;
+    opacity: 0.6 !important;
+    transition: opacity 0.2s ease !important;
+}
+
+.model-edit-btn:hover {
+    opacity: 1 !important;
+}
+
+/* Model Name Edit Mode - Hidden by default */
+.model-name-edit {
+    display: none !important;
+    align-items: center !important;
+    gap: 8px !important;
+    padding: 6px 12px !important;
+    background: var(--b2w-white) !important;
+    border: 1px solid var(--b2w-brand-1-500) !important;
+    border-radius: 6px !important;
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1) !important;
+}
+
+/* Show when active */
+.model-name-edit.active {
+    display: flex !important;
+}
+
+.model-name-input {
+    border: 1px solid var(--b2w-grey-1-300) !important;
+    border-radius: 4px !important;
+    padding: 4px 8px !important;
+    font-size: 0.875rem !important;
+    font-weight: 600 !important;
+    color: var(--b2w-grey-1-900) !important;
+    min-width: 200px !important;
+}
+
+.model-name-input:focus {
+    outline: none !important;
+    border-color: var(--b2w-brand-1-500) !important;
+}
+
+.model-save-btn,
+.model-cancel-btn {
+    background: transparent !important;
+    border: none !important;
+    cursor: pointer !important;
+    padding: 4px 8px !important;
+    font-size: 1rem !important;
+    font-weight: bold !important;
+    transition: all 0.2s ease !important;
+}
+
+.model-save-btn {
+    color: var(--b2w-success-500) !important;
+}
+
+.model-save-btn:hover {
+    color: var(--b2w-success-600) !important;
+    background: var(--b2w-success-50) !important;
+    border-radius: 4px !important;
+}
+
+.model-cancel-btn {
+    color: var(--b2w-grey-1-500) !important;
+}
+
+.model-cancel-btn:hover {
+    color: var(--b2w-grey-1-700) !important;
+    background: var(--b2w-grey-1-100) !important;
+    border-radius: 4px !important;
+}
