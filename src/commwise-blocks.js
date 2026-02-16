@@ -100,6 +100,69 @@ export function composePreviewHtml(blocks) {
     .map((block) => block.content)
     .join("\n\n");
 
+  const localizeWpContentPath = (value) =>
+    value
+      .replace(/(src|href)=(["'])\/wp-content\//gi, "$1=$2wp-content/")
+      .replace(/url\((["']?)\/wp-content\//gi, "url($1wp-content/");
+
+  const localizedStyle = localizeWpContentPath(style);
+  const localizedDiv = localizeWpContentPath(div);
+
+  const previewFallbackScript = String.raw`
+      (function setupLocalAssetFallback() {
+        const FALLBACK_SVG = "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(
+          '<svg xmlns="http://www.w3.org/2000/svg" width="160" height="40" viewBox="0 0 160 40"><rect width="160" height="40" rx="8" fill="#f2f4f7" stroke="#d0d5dd"/><text x="80" y="25" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="14" fill="#475467">CommWise Logo</text></svg>'
+        );
+
+        function isWordPressAssetPath(url) {
+          return typeof url === "string" && /^\/?wp-content\//i.test(url.replace(/^https?:\/\/[^/]+\//i, ""));
+        }
+
+        function applyFallback(img) {
+          if (!img || img.dataset.localFallbackApplied === "1") {
+            return;
+          }
+
+          const src = img.getAttribute("src") || "";
+          if (!isWordPressAssetPath(src)) {
+            return;
+          }
+
+          img.dataset.localFallbackApplied = "1";
+          img.dataset.localMissingAsset = src;
+          img.src = FALLBACK_SVG;
+
+          if (!img.alt || !img.alt.trim()) {
+            img.alt = "Missing local asset";
+          }
+
+          console.warn("[preview] Missing local asset replaced:", src);
+        }
+
+        window.addEventListener(
+          "error",
+          function onAssetError(event) {
+            const target = event && event.target;
+            if (target && target.tagName === "IMG") {
+              applyFallback(target);
+            }
+          },
+          true
+        );
+
+        document.addEventListener("DOMContentLoaded", function onReady() {
+          document.querySelectorAll("img[src]").forEach(function(img) {
+            const src = img.getAttribute("src") || "";
+            if (isWordPressAssetPath(src)) {
+              img.addEventListener("error", function() {
+                applyFallback(img);
+              }, { once: true });
+            }
+          });
+        });
+      })();
+    `;
+
   return `<!doctype html>
 <html lang="fr">
   <head>
@@ -107,12 +170,14 @@ export function composePreviewHtml(blocks) {
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Commwise Local Preview</title>
     <style>
-${style}
+  ${localizedStyle}
     </style>
   </head>
   <body>
-${div}
+  ${localizedDiv}
     <script>
+${previewFallbackScript}
+
 ${script}
     </script>
   </body>

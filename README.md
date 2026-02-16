@@ -1,12 +1,12 @@
 # DDOptim Commwise Sync (JavaScript)
 
-Base JavaScript pour travailler un app Commwise en local, versionner le code avec Git, puis préparer un push vers Commwise.
+JavaScript starter to work on a Commwise app locally, version the code with Git, and prepare a push back to Commwise.
 
-## Objectif
+## Goal
 
-- Éditer les blocs Commwise localement dans `commwise/blocks`
-- Générer un preview HTML local
-- Géner un payload JSON pour appliquer les changements côté Commwise
+- Edit Commwise blocks locally in `commwise/blocks`
+- Generate a local HTML preview
+- Generate a JSON payload to apply changes on the Commwise side
 
 ## Installation
 
@@ -15,44 +15,54 @@ npm install
 copy config\\commwise.example.json config\\commwise.json
 ```
 
-Puis éditer `config/commwise.json` avec ton `appId`.
+Then edit `config/commwise.json` with your `appId`.
+
+## Commwise App URL
+
+- App ID: `13866`
+- URL: `https://commwise.b2wise.com/mcp-c3-ddoptim-buffer-positioning-optimizer`
+
+## Local Mirrored Assets
+
+- Downloaded logo: `.local/wp-content/uploads/2025/06/WiseyLogo.png`
+- Local preview uses this copy to avoid missing WordPress references.
 
 ## Structure
 
-- `commwise/blocks/` : source Git-friendly
-- `src/commwise-blocks.js` : moteur de lecture/écriture/composition
-- `scripts/sync-pull.js` : importe un snapshot JSON vers les fichiers de blocs
-- `scripts/sync-pack.js` : pack les blocs locaux en payload JSON
-- `scripts/sync-push.js` : prépare la commande de push via MCP
-- `scripts/preview.js` : génère `.local/preview.html`
+- `commwise/blocks/`: Git-friendly source files
+- `src/commwise-blocks.js`: read/write/compose engine
+- `scripts/sync-pull.js`: imports a JSON snapshot into local block files
+- `scripts/sync-pack.js`: packs local blocks into a JSON payload
+- `scripts/sync-push.js`: prepares the MCP push command
+- `scripts/preview.js`: generates `.local/preview.html`
 
-## Convention de nommage des blocs
+## Block Naming Convention
 
 `<type>.<position>.<ext>`
 
-Exemples:
+Examples:
 - `style.00100.css`
 - `div.00200.html`
 - `script.00300.js`
 - `data.00400.sql`
 
-## Workflow conseillé
+## Recommended Workflow
 
-1. **Pull** depuis Commwise vers JSON (via MCP avec Copilot), puis:
+1. **Pull** from Commwise to JSON (via MCP with Copilot), then:
    ```bash
    npm run sync:pull -- .local/exports/app-12345-snapshot.json
    ```
-2. Édite les blocs dans `commwise/blocks`
-3. Génère un preview:
+2. Edit blocks in `commwise/blocks`
+3. Generate a preview:
    ```bash
    npm run preview
    ```
-4. Pack pour push:
+4. Pack for push:
    ```bash
    npm run sync:pack
    npm run sync:push
    ```
-5. Demande à Copilot d'appliquer le payload généré via MCP Commwise
+5. Ask Copilot to apply the generated payload through Commwise MCP tools
 
 ## Tests
 
