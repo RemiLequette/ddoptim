@@ -1,8 +1,16 @@
 import path from "node:path";
-import { readFile, readdir, unlink } from "node:fs/promises";
+import { appendFile, readFile, readdir, unlink } from "node:fs/promises";
 import iconv from "iconv-lite";
-import { writeBlocksToDir } from "../src/commwise-blocks.js";
-import { BLOCK_DIR, CONFIG_PATH, EXPORT_DIR, readJsonFile, writeJsonFile } from "./utils.js";
+import { serializeBlockFilename, writeBlocksToDir } from "../src/commwise-blocks.js";
+import {
+  BLOCK_DIR,
+  CONFIG_PATH,
+  LIVE_DIR,
+  PULL_LOG_PATH,
+  PULL_REPORT_PATH,
+  readJsonFile,
+  writeJsonFile
+} from "./utils.js";
 
 function countMojibakeSignals(text) {
   if (!text) {
@@ -115,6 +123,26 @@ async function cleanExistingBlockFiles(blockDir) {
   );
 }
 
+function formatPullLogEntry(report) {
+  const lines = [
+    `## Pull ${report.pulledAt}`,
+    "",
+    `- App ID: ${report.appId}`,
+    `- Source: ${report.source}`,
+    `- Block count: ${report.blockCount}`,
+    "",
+    "### Blocks",
+    ""
+  ];
+
+  for (const block of report.blocks) {
+    lines.push(`- ${block.file} (${block.code_type} ${String(block.position).padStart(5, "0")})`);
+  }
+
+  lines.push("", "");
+  return lines.join("\n");
+}
+
 async function main() {
   const config = await readJsonFile(CONFIG_PATH);
 
@@ -122,21 +150,7 @@ async function main() {
     throw new Error("config/commwise.json doit contenir appId.");
   }
 
-  const sourcePath = process.argv[2];
-  if (!sourcePath) {
-    const emptySnapshotPath = path.join(EXPORT_DIR, `app-${config.appId}-snapshot.example.json`);
-    await writeJsonFile(emptySnapshotPath, {
-      appId: config.appId,
-      workspaceName: config.workspaceName ?? "commwise-app",
-      generatedAt: new Date().toISOString(),
-      blocks: []
-    });
-
-    console.log(`Aucun fichier source fourni.`);
-    console.log(`Exemple créé: ${emptySnapshotPath}`);
-    console.log("Commande attendue: npm run sync:pull -- .local/exports/app-<id>-snapshot.json");
-    return;
-  }
+  const sourcePath = process.argv[2] ?? path.join(LIVE_DIR, `app-${config.appId}-full.txt`);
 
   const resolvedSourcePath = path.resolve(sourcePath);
   const extension = path.extname(resolvedSourcePath).toLowerCase();
@@ -159,10 +173,34 @@ async function main() {
   }
 
   blocks = normalizeBlockEncoding(blocks);
+  const sortedBlocks = blocks
+    .map((block) => ({
+      ...block,
+      file: serializeBlockFilename(block.code_type, block.position)
+    }))
+    .sort((a, b) => a.file.localeCompare(b.file));
 
   await cleanExistingBlockFiles(BLOCK_DIR);
-  await writeBlocksToDir(BLOCK_DIR, blocks);
+  await writeBlocksToDir(BLOCK_DIR, sortedBlocks);
+
+  const report = {
+    appId: config.appId,
+    pulledAt: new Date().toISOString(),
+    source: resolvedSourcePath,
+    blockCount: sortedBlocks.length,
+    blocks: sortedBlocks.map((block) => ({
+      code_type: block.code_type,
+      position: block.position,
+      file: block.file
+    }))
+  };
+
+  await writeJsonFile(PULL_REPORT_PATH, report);
+  await appendFile(PULL_LOG_PATH, formatPullLogEntry(report), "utf8");
+
   console.log(`Blocs importés dans ${BLOCK_DIR}`);
+  console.log(`Report JSON: ${PULL_REPORT_PATH}`);
+  console.log(`Log Markdown: ${PULL_LOG_PATH}`);
 }
 
 main().catch((error) => {

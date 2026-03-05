@@ -1,6 +1,6 @@
 import path from "node:path";
 import { loadBlocksFromDir } from "../src/commwise-blocks.js";
-import { BLOCK_DIR, CONFIG_PATH, EXPORT_DIR, readJsonFile, writeJsonFile } from "./utils.js";
+import { ARTIFACT_DIR, BLOCK_DIR, CONFIG_PATH, readJsonFile, writeJsonFile } from "./utils.js";
 
 async function main() {
   const config = await readJsonFile(CONFIG_PATH);
@@ -18,7 +18,7 @@ async function main() {
     blocks
   };
 
-  const outputPath = path.join(EXPORT_DIR, `app-${config.appId}-payload.json`);
+  const outputPath = path.join(ARTIFACT_DIR, `app-${config.appId}-payload.json`);
   await writeJsonFile(outputPath, payload);
 
   console.log(`Payload généré: ${outputPath}`);

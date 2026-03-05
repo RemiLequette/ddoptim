@@ -169,7 +169,7 @@ When you create a new app with `commwise_create_webapp`, these blocks are auto-c
 3. Update META 1 with project requirements
 4. Update META 2 with initial task list
 5. Present plan to user for approval before building
-
+0 €
 **For EXISTING apps:**
 1. Call `commwise_get_expertise`
 2. Inspect app state (`commwise_inspect_webapp` or `commwise_list_blocks`)

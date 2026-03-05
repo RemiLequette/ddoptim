@@ -1,5 +1,6 @@
 {
   "appId": 12345,
   "workspaceName": "my-commwise-app",
+  "livePullSourcePath": "commwise/live/app-12345-full.txt",
   "notes": "Copie ce fichier vers config/commwise.json et adapte appId."
 }

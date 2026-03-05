@@ -1,9 +1,9 @@
 import path from "node:path";
-import { CONFIG_PATH, EXPORT_DIR, readJsonFile } from "./utils.js";
+import { ARTIFACT_DIR, CONFIG_PATH, readJsonFile } from "./utils.js";
 
 async function main() {
   const config = await readJsonFile(CONFIG_PATH);
-  const payloadPath = path.join(EXPORT_DIR, `app-${config.appId}-payload.json`);
+  const payloadPath = path.join(ARTIFACT_DIR, `app-${config.appId}-payload.json`);
 
   console.log("Push Commwise prêt.");
   console.log(`- App ID: ${config.appId}`);
