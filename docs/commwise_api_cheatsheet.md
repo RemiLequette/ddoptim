@@ -109,8 +109,7 @@ Practical guide for day-to-day work on DDOptim (`appID: 13866`).
 ## 8) About Local Sync Scripts in This Repo
 
 In this repository:
-- `npm run sync:pull` reads a local export file and rebuilds `commwise/blocks`.
-- `npm run sync:pull:live` also reads local `.local/exports/app-13866-full.txt`.
+- `npm run sync:pull` (or `npm run sync:pull:algorithms`) reads a local export file and refreshes `commwise/algorithm-blocks` only.
 - These scripts do **not** call CommWise directly.
 
 Use CommWise MCP to fetch/update app data, then use local scripts for file-based workflow.

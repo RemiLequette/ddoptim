@@ -3,19 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Local Commwise app sync workflow with Git-friendly block files.",
+  "description": "DDOPTIM automated algorithm testing framework with JSON model fixtures and selective CommWise sync.",
   "scripts": {
-    "sync:pull": "node scripts/sync-pull.js",
-    "sync:pull:live": "node scripts/sync-pull-live.js",
-    "sync:pack": "node scripts/sync-pack.js",
-    "sync:push": "node scripts/sync-push.js",
-    "preview": "node scripts/preview.js",
-    "test": "vitest run"
+    "sync:pull": "node scripts/sync-pull-algorithms.js",
+    "sync:pull:algorithms": "node scripts/sync-pull-algorithms.js",
+    "test": "vitest run",
+    "test:algorithms": "vitest run tests/algorithms"
   },
   "devDependencies": {
     "vitest": "^2.1.8"
-  },
-  "dependencies": {
-    "iconv-lite": "^0.7.2"
   }
 }

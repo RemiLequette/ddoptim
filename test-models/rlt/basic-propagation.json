@@ -1,0 +1,60 @@
+{
+  "metadata": {
+    "name": "RLT Basic Propagation",
+    "description": "Propagation should push time budgets downstream and set mandatory buffers on deficit nodes."
+  },
+  "nodes": [
+    {
+      "id": "bike",
+      "product": "Bike",
+      "independentADU": 12,
+      "customerTolerance": 6,
+      "leadTime": 3,
+      "unitCost": 100,
+      "bufferProfile": "F",
+      "children": [
+        { "id": "frame", "quantity": 1, "linkType": "bom" },
+        { "id": "wheel", "quantity": 2, "linkType": "bom" },
+        { "id": "fork", "quantity": 1, "linkType": "bom" }
+      ]
+    },
+    {
+      "id": "frame",
+      "product": "Frame",
+      "independentADU": 0,
+      "leadTime": 2,
+      "unitCost": 30,
+      "bufferProfile": "I",
+      "children": [
+        { "id": "steel", "quantity": 2, "linkType": "bom" }
+      ]
+    },
+    {
+      "id": "wheel",
+      "product": "Wheel",
+      "independentADU": 0,
+      "leadTime": 4,
+      "unitCost": 15,
+      "bufferProfile": "I",
+      "children": []
+    },
+    {
+      "id": "fork",
+      "product": "Fork",
+      "independentADU": 0,
+      "leadTime": 1,
+      "unitCost": 12,
+      "bufferProfile": "I",
+      "children": []
+    },
+    {
+      "id": "steel",
+      "product": "Steel",
+      "independentADU": 0,
+      "leadTime": 2,
+      "unitCost": 4,
+      "bufferProfile": "AL",
+      "children": []
+    }
+  ]
+}

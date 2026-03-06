@@ -1,0 +1,33 @@
+{
+  "metadata": {
+    "name": "OPT Mandatory Budget Infeasible",
+    "description": "Budget is too low to satisfy mandatory tolerance constraints."
+  },
+  "scenario": {
+    "budgetMax": 500
+  },
+  "nodes": [
+    {
+      "id": "finished_good",
+      "product": "Finished Good",
+      "independentADU": 10,
+      "customerTolerance": 2,
+      "toleranceMandatory": true,
+      "leadTime": 6,
+      "unitCost": 90,
+      "bufferProfile": "F",
+      "children": [
+        { "id": "component", "quantity": 1, "linkType": "bom" }
+      ]
+    },
+    {
+      "id": "component",
+      "product": "Component",
+      "independentADU": 0,
+      "leadTime": 2,
+      "unitCost": 12,
+      "bufferProfile": "I",
+      "children": []
+    }
+  ]
+}

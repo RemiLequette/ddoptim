@@ -1,0 +1,538 @@
+{
+  "appId": 13866,
+  "pulledAt": "2026-03-05T13:35:59.137Z",
+  "source": "C:\\Users\\RemiLequette\\Development\\projects\\ddoptim\\commwise\\live\\app-13866-full.txt",
+  "blockCount": 106,
+  "blocks": [
+    {
+      "code_type": "data",
+      "position": 100,
+      "file": "data.00100.sql"
+    },
+    {
+      "code_type": "diagnostics",
+      "position": 20100,
+      "file": "diagnostics.20100.js"
+    },
+    {
+      "code_type": "diagnostics",
+      "position": 20200,
+      "file": "diagnostics.20200.js"
+    },
+    {
+      "code_type": "diagnostics",
+      "position": 20300,
+      "file": "diagnostics.20300.js"
+    },
+    {
+      "code_type": "div",
+      "position": 100,
+      "file": "div.00100.html"
+    },
+    {
+      "code_type": "div",
+      "position": 105,
+      "file": "div.00105.html"
+    },
+    {
+      "code_type": "div",
+      "position": 106,
+      "file": "div.00106.html"
+    },
+    {
+      "code_type": "div",
+      "position": 107,
+      "file": "div.00107.html"
+    },
+    {
+      "code_type": "div",
+      "position": 108,
+      "file": "div.00108.html"
+    },
+    {
+      "code_type": "div",
+      "position": 109,
+      "file": "div.00109.html"
+    },
+    {
+      "code_type": "div",
+      "position": 110,
+      "file": "div.00110.html"
+    },
+    {
+      "code_type": "div",
+      "position": 200,
+      "file": "div.00200.html"
+    },
+    {
+      "code_type": "div",
+      "position": 210,
+      "file": "div.00210.html"
+    },
+    {
+      "code_type": "div",
+      "position": 300,
+      "file": "div.00300.html"
+    },
+    {
+      "code_type": "div",
+      "position": 360,
+      "file": "div.00360.html"
+    },
+    {
+      "code_type": "meta",
+      "position": 1,
+      "file": "meta.00001.txt"
+    },
+    {
+      "code_type": "meta",
+      "position": 2,
+      "file": "meta.00002.txt"
+    },
+    {
+      "code_type": "script",
+      "position": 50,
+      "file": "script.00050.js"
+    },
+    {
+      "code_type": "script",
+      "position": 75,
+      "file": "script.00075.js"
+    },
+    {
+      "code_type": "script",
+      "position": 76,
+      "file": "script.00076.js"
+    },
+    {
+      "code_type": "script",
+      "position": 100,
+      "file": "script.00100.js"
+    },
+    {
+      "code_type": "script",
+      "position": 200,
+      "file": "script.00200.js"
+    },
+    {
+      "code_type": "script",
+      "position": 300,
+      "file": "script.00300.js"
+    },
+    {
+      "code_type": "script",
+      "position": 400,
+      "file": "script.00400.js"
+    },
+    {
+      "code_type": "script",
+      "position": 407,
+      "file": "script.00407.js"
+    },
+    {
+      "code_type": "script",
+      "position": 500,
+      "file": "script.00500.js"
+    },
+    {
+      "code_type": "script",
+      "position": 600,
+      "file": "script.00600.js"
+    },
+    {
+      "code_type": "script",
+      "position": 620,
+      "file": "script.00620.js"
+    },
+    {
+      "code_type": "script",
+      "position": 650,
+      "file": "script.00650.js"
+    },
+    {
+      "code_type": "script",
+      "position": 660,
+      "file": "script.00660.js"
+    },
+    {
+      "code_type": "script",
+      "position": 661,
+      "file": "script.00661.js"
+    },
+    {
+      "code_type": "script",
+      "position": 662,
+      "file": "script.00662.js"
+    },
+    {
+      "code_type": "script",
+      "position": 663,
+      "file": "script.00663.js"
+    },
+    {
+      "code_type": "script",
+      "position": 700,
+      "file": "script.00700.js"
+    },
+    {
+      "code_type": "script",
+      "position": 800,
+      "file": "script.00800.js"
+    },
+    {
+      "code_type": "script",
+      "position": 850,
+      "file": "script.00850.js"
+    },
+    {
+      "code_type": "script",
+      "position": 900,
+      "file": "script.00900.js"
+    },
+    {
+      "code_type": "script",
+      "position": 905,
+      "file": "script.00905.js"
+    },
+    {
+      "code_type": "script",
+      "position": 910,
+      "file": "script.00910.js"
+    },
+    {
+      "code_type": "script",
+      "position": 915,
+      "file": "script.00915.js"
+    },
+    {
+      "code_type": "script",
+      "position": 920,
+      "file": "script.00920.js"
+    },
+    {
+      "code_type": "script",
+      "position": 925,
+      "file": "script.00925.js"
+    },
+    {
+      "code_type": "script",
+      "position": 930,
+      "file": "script.00930.js"
+    },
+    {
+      "code_type": "script",
+      "position": 935,
+      "file": "script.00935.js"
+    },
+    {
+      "code_type": "script",
+      "position": 1000,
+      "file": "script.01000.js"
+    },
+    {
+      "code_type": "script",
+      "position": 1090,
+      "file": "script.01090.js"
+    },
+    {
+      "code_type": "script",
+      "position": 1100,
+      "file": "script.01100.js"
+    },
+    {
+      "code_type": "script",
+      "position": 1150,
+      "file": "script.01150.js"
+    },
+    {
+      "code_type": "script",
+      "position": 1160,
+      "file": "script.01160.js"
+    },
+    {
+      "code_type": "script",
+      "position": 1165,
+      "file": "script.01165.js"
+    },
+    {
+      "code_type": "script",
+      "position": 1170,
+      "file": "script.01170.js"
+    },
+    {
+      "code_type": "script",
+      "position": 1175,
+      "file": "script.01175.js"
+    },
+    {
+      "code_type": "script",
+      "position": 1177,
+      "file": "script.01177.js"
+    },
+    {
+      "code_type": "script",
+      "position": 1200,
+      "file": "script.01200.js"
+    },
+    {
+      "code_type": "script",
+      "position": 1210,
+      "file": "script.01210.js"
+    },
+    {
+      "code_type": "script",
+      "position": 1220,
+      "file": "script.01220.js"
+    },
+    {
+      "code_type": "script",
+      "position": 1230,
+      "file": "script.01230.js"
+    },
+    {
+      "code_type": "script",
+      "position": 1232,
+      "file": "script.01232.js"
+    },
+    {
+      "code_type": "script",
+      "position": 1234,
+      "file": "script.01234.js"
+    },
+    {
+      "code_type": "script",
+      "position": 1236,
+      "file": "script.01236.js"
+    },
+    {
+      "code_type": "script",
+      "position": 1240,
+      "file": "script.01240.js"
+    },
+    {
+      "code_type": "script",
+      "position": 1250,
+      "file": "script.01250.js"
+    },
+    {
+      "code_type": "script",
+      "position": 1260,
+      "file": "script.01260.js"
+    },
+    {
+      "code_type": "script",
+      "position": 1270,
+      "file": "script.01270.js"
+    },
+    {
+      "code_type": "script",
+      "position": 1271,
+      "file": "script.01271.js"
+    },
+    {
+      "code_type": "script",
+      "position": 1272,
+      "file": "script.01272.js"
+    },
+    {
+      "code_type": "script",
+      "position": 1280,
+      "file": "script.01280.js"
+    },
+    {
+      "code_type": "script",
+      "position": 1285,
+      "file": "script.01285.js"
+    },
+    {
+      "code_type": "script",
+      "position": 1290,
+      "file": "script.01290.js"
+    },
+    {
+      "code_type": "script",
+      "position": 1300,
+      "file": "script.01300.js"
+    },
+    {
+      "code_type": "script",
+      "position": 1305,
+      "file": "script.01305.js"
+    },
+    {
+      "code_type": "script",
+      "position": 1310,
+      "file": "script.01310.js"
+    },
+    {
+      "code_type": "script",
+      "position": 1320,
+      "file": "script.01320.js"
+    },
+    {
+      "code_type": "script",
+      "position": 1330,
+      "file": "script.01330.js"
+    },
+    {
+      "code_type": "script",
+      "position": 1335,
+      "file": "script.01335.js"
+    },
+    {
+      "code_type": "script",
+      "position": 1337,
+      "file": "script.01337.js"
+    },
+    {
+      "code_type": "script",
+      "position": 1340,
+      "file": "script.01340.js"
+    },
+    {
+      "code_type": "script",
+      "position": 1345,
+      "file": "script.01345.js"
+    },
+    {
+      "code_type": "script",
+      "position": 1350,
+      "file": "script.01350.js"
+    },
+    {
+      "code_type": "script",
+      "position": 1355,
+      "file": "script.01355.js"
+    },
+    {
+      "code_type": "script",
+      "position": 1360,
+      "file": "script.01360.js"
+    },
+    {
+      "code_type": "script",
+      "position": 1380,
+      "file": "script.01380.js"
+    },
+    {
+      "code_type": "script",
+      "position": 1385,
+      "file": "script.01385.js"
+    },
+    {
+      "code_type": "style",
+      "position": 50,
+      "file": "style.00050.css"
+    },
+    {
+      "code_type": "style",
+      "position": 100,
+      "file": "style.00100.css"
+    },
+    {
+      "code_type": "style",
+      "position": 103,
+      "file": "style.00103.css"
+    },
+    {
+      "code_type": "style",
+      "position": 106,
+      "file": "style.00106.css"
+    },
+    {
+      "code_type": "style",
+      "position": 107,
+      "file": "style.00107.css"
+    },
+    {
+      "code_type": "style",
+      "position": 108,
+      "file": "style.00108.css"
+    },
+    {
+      "code_type": "style",
+      "position": 109,
+      "file": "style.00109.css"
+    },
+    {
+      "code_type": "style",
+      "position": 110,
+      "file": "style.00110.css"
+    },
+    {
+      "code_type": "style",
+      "position": 200,
+      "file": "style.00200.css"
+    },
+    {
+      "code_type": "style",
+      "position": 300,
+      "file": "style.00300.css"
+    },
+    {
+      "code_type": "style",
+      "position": 310,
+      "file": "style.00310.css"
+    },
+    {
+      "code_type": "style",
+      "position": 400,
+      "file": "style.00400.css"
+    },
+    {
+      "code_type": "style",
+      "position": 450,
+      "file": "style.00450.css"
+    },
+    {
+      "code_type": "style",
+      "position": 600,
+      "file": "style.00600.css"
+    },
+    {
+      "code_type": "style",
+      "position": 605,
+      "file": "style.00605.css"
+    },
+    {
+      "code_type": "style",
+      "position": 610,
+      "file": "style.00610.css"
+    },
+    {
+      "code_type": "style",
+      "position": 650,
+      "file": "style.00650.css"
+    },
+    {
+      "code_type": "style",
+      "position": 700,
+      "file": "style.00700.css"
+    },
+    {
+      "code_type": "style",
+      "position": 710,
+      "file": "style.00710.css"
+    },
+    {
+      "code_type": "style",
+      "position": 810,
+      "file": "style.00810.css"
+    },
+    {
+      "code_type": "style",
+      "position": 820,
+      "file": "style.00820.css"
+    },
+    {
+      "code_type": "style",
+      "position": 830,
+      "file": "style.00830.css"
+    },
+    {
+      "code_type": "style",
+      "position": 840,
+      "file": "style.00840.css"
+    }
+  ]
+}

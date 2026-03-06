@@ -1,0 +1,20 @@
+{
+  "metadata": {
+    "name": "RLT Locked Infeasible",
+    "description": "A locked unbuffered demand node with deficit should be reported as unsolvable."
+  },
+  "nodes": [
+    {
+      "id": "critical_assembly",
+      "product": "Critical Assembly",
+      "independentADU": 6,
+      "customerTolerance": 4,
+      "leadTime": 10,
+      "unitCost": 80,
+      "bufferProfile": "F",
+      "bufferLocked": true,
+      "hasBuffer": false,
+      "children": []
+    }
+  ]
+}

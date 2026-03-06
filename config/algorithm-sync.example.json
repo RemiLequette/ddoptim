@@ -1,0 +1,18 @@
+{
+  "sourcePath": "commwise/live/app-13866-full.txt",
+  "outputDir": "commwise/algorithm-blocks",
+  "requiredBlocks": [
+    "script.00400.js",
+    "script.00407.js",
+    "script.00500.js",
+    "script.00600.js",
+    "script.00620.js",
+    "script.00650.js",
+    "script.00660.js",
+    "script.00661.js",
+    "script.00662.js",
+    "script.00663.js",
+    "script.00700.js"
+  ],
+  "notes": "Copy this file to config/algorithm-sync.json and adjust requiredBlocks as needed."
+}

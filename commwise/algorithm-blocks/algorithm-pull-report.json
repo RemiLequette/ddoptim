@@ -1,0 +1,23 @@
+{
+  "appId": 13866,
+  "pulledAt": "2026-03-06T13:56:26.757Z",
+  "source": "C:\\Users\\RemiLequette\\Development\\projects\\ddoptim\\commwise\\live\\app-13866-full.txt",
+  "outputDir": "C:\\Users\\RemiLequette\\Development\\projects\\ddoptim\\commwise\\algorithm-blocks",
+  "requiredCount": 11,
+  "selectedCount": 11,
+  "missingCount": 0,
+  "selectedBlocks": [
+    "script.00400.js",
+    "script.00407.js",
+    "script.00500.js",
+    "script.00600.js",
+    "script.00620.js",
+    "script.00650.js",
+    "script.00660.js",
+    "script.00661.js",
+    "script.00662.js",
+    "script.00663.js",
+    "script.00700.js"
+  ],
+  "missingBlocks": []
+}

@@ -1,0 +1,68 @@
+{
+  "metadata": {
+    "name": "OPT Mandatory Feasible",
+    "description": "Mandatory tolerance is feasible with a realistic budget and should produce f0 = 0."
+  },
+  "scenario": {
+    "budgetMax": 20000
+  },
+  "nodes": [
+    {
+      "id": "bike",
+      "product": "Bike",
+      "independentADU": 8,
+      "customerTolerance": 4,
+      "toleranceMandatory": true,
+      "leadTime": 5,
+      "unitCost": 120,
+      "bufferProfile": "F",
+      "children": [
+        { "id": "frame", "quantity": 1, "linkType": "bom" },
+        { "id": "wheelset", "quantity": 1, "linkType": "bom" }
+      ]
+    },
+    {
+      "id": "frame",
+      "product": "Frame",
+      "independentADU": 0,
+      "leadTime": 2,
+      "unitCost": 20,
+      "bufferProfile": "I",
+      "hasBuffer": true,
+      "children": [
+        { "id": "steel", "quantity": 2, "linkType": "bom" }
+      ]
+    },
+    {
+      "id": "wheelset",
+      "product": "Wheelset",
+      "independentADU": 0,
+      "leadTime": 2,
+      "unitCost": 18,
+      "bufferProfile": "I",
+      "children": [
+        { "id": "supplier_lock", "quantity": 1, "linkType": "bom" }
+      ]
+    },
+    {
+      "id": "steel",
+      "product": "Steel",
+      "independentADU": 0,
+      "leadTime": 1,
+      "unitCost": 5,
+      "bufferProfile": "AL",
+      "children": []
+    },
+    {
+      "id": "supplier_lock",
+      "product": "Supplier Lock",
+      "independentADU": 0,
+      "leadTime": 3,
+      "unitCost": 10,
+      "bufferProfile": "AI",
+      "bufferLocked": true,
+      "hasBuffer": true,
+      "children": []
+    }
+  ]
+}

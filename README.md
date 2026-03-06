@@ -1,96 +1,94 @@
-# DDOptim Commwise Sync (JavaScript)
+# DDOPTIM Automated Algorithm Test Framework
 
-JavaScript starter to work on a Commwise app locally, version the code with Git, and prepare a push back to Commwise.
+This repository is now focused on **automated testing of DDOPTIM optimization algorithms**.
 
-## Goal
+The priority is to validate algorithm behavior (RLT and OPT), not UI rendering.
 
-- Edit Commwise blocks locally in `commwise/blocks`
-- Generate a local HTML preview
-- Generate a JSON payload to apply changes on the Commwise side
-- Keep a pull report with timestamp + pulled block list in `commwise/`
+## Scope
 
-## Installation
+- Run deterministic algorithm tests in Node.js.
+- Maintain a reusable library of JSON test models.
+- Pull only the CommWise block files required for algorithm verification.
+- Keep UI-related blocks outside the core test loop.
+
+## Quick Start
 
 ```bash
 npm install
-copy config\\commwise.example.json config\\commwise.json
+copy config\commwise.example.json config\commwise.json
 ```
 
-Then edit `config/commwise.json` with your `appId`.
-
-## Commwise App URL
-
-- App ID: `13866`
-- URL: `https://commwise.b2wise.com/mcp-c3-ddoptim-buffer-positioning-optimizer`
-
-## Local Mirrored Assets
-
-- Downloaded logo: `.local/wp-content/uploads/2025/06/WiseyLogo.png`
-- Local preview uses this copy to avoid missing WordPress references.
-
-## One-Step Live Refresh
+Optional for algorithm-only pull customization:
 
 ```bash
-npm run sync:pull:live
+copy config\algorithm-sync.example.json config\algorithm-sync.json
 ```
 
-What it does:
-- Reads `commwise/live/app-13866-full.txt` (or `livePullSourcePath` from `config/commwise.json`)
-- Syncs blocks into `commwise/blocks`
-- Removes block files that no longer exist in the source
-- Updates pull tracking files:
-   - `commwise/last-pull.json`
-   - `commwise/pull-log.md`
-- Regenerates `.local/preview.html`
+## Core Workflow
 
-Notes:
-- This command assumes the latest full export file exists at `commwise/live/app-<appId>-full.txt`.
-- Optional config override in `config/commwise.json`:
-   - `"livePullSourcePath": "path/to/app-<id>-full.txt"`
+1. Place the latest full CommWise export in `commwise/live/app-<appId>-full.txt`.
+2. Pull algorithm-only blocks:
 
-## Structure
-
-- `commwise/blocks/`: Git-friendly source files
-- `commwise/live/`: source full exports used for live pull
-- `commwise/artifacts/`: generated payloads for push
-- `commwise/last-pull.json`: latest pull metadata
-- `commwise/pull-log.md`: pull history (timestamp + block list)
-- `src/commwise-blocks.js`: read/write/compose engine
-- `scripts/sync-pull.js`: imports a full export (`.txt`) or snapshot (`.json`) into local block files
-- `scripts/sync-pack.js`: packs local blocks into a JSON payload
-- `scripts/sync-push.js`: prepares the MCP push command
-- `scripts/preview.js`: generates `.local/preview.html`
-
-## Block Naming Convention
-
-`<type>.<position>.<ext>`
-
-Examples:
-- `style.00100.css`
-- `div.00200.html`
-- `script.00300.js`
-- `data.00400.sql`
-
-## Recommended Workflow
-
-1. **Pull** from Commwise and save a full export file to `commwise/live/app-<id>-full.txt`, then:
    ```bash
-   npm run sync:pull:live
+   npm run sync:pull:algorithms
    ```
-2. Edit blocks in `commwise/blocks`
-3. Generate a preview:
-   ```bash
-   npm run preview
-   ```
-4. Pack for push:
-   ```bash
-   npm run sync:pack
-   npm run sync:push
-   ```
-5. Ask Copilot to apply the generated payload through Commwise MCP tools
 
-## Tests
+3. Run algorithm tests:
 
-```bash
-npm test
+   ```bash
+   npm run test:algorithms
+   ```
+
+4. Add or update JSON fixtures in `test-models/` and extend tests in `tests/algorithms/`.
+
+## Project Layout
+
+- `src/algorithms/`: pure algorithm modules for test execution.
+- `tests/algorithms/`: Vitest suites targeting RLT and OPT behavior.
+- `test-models/`: JSON fixture library for reusable test scenarios.
+- `scripts/sync-pull-algorithms.js`: selective CommWise pull for algorithm-relevant blocks only.
+- `config/algorithm-sync.example.json`: required block list and output path template.
+- `commwise/algorithm-blocks/`: generated output folder for algorithm-only mirrors.
+
+## JSON Test Model Example
+
+```json
+{
+  "metadata": {
+    "name": "Mandatory Budget Test"
+  },
+  "scenario": {
+    "budgetMax": 5000
+  },
+  "nodes": [
+    {
+      "id": "finished_good",
+      "independentADU": 10,
+      "customerTolerance": 2,
+      "toleranceMandatory": true,
+      "leadTime": 6,
+      "unitCost": 90,
+      "bufferProfile": "F",
+      "children": [{ "id": "component", "quantity": 1 }]
+    },
+    {
+      "id": "component",
+      "leadTime": 2,
+      "unitCost": 12,
+      "bufferProfile": "I",
+      "children": []
+    }
+  ]
+}
 ```
+
+## Commands
+
+- `npm run sync:pull`: alias of algorithm-only sync.
+- `npm run test`: run all tests.
+- `npm run test:algorithms`: run algorithm-focused tests only.
+- `npm run sync:pull:algorithms`: sync only required algorithm blocks from a full CommWise export.
+
+## Notes
+
+- Algorithm tests are designed to execute without browser globals or UI containers.
